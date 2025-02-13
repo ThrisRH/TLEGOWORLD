@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tlego_world/feature/plash/plash_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,14 +11,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text(
-            'Xin chào, Flutter!',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
+      debugShowCheckedModeBanner: false,
+      home: PlashPages(),
     );
   }
 }

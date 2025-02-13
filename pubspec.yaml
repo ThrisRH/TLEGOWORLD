@@ -12,6 +12,19 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
+  bloc: ^8.1.4
+  flutter_svg: ^1.1.6
+  smooth_page_indicator: ^1.2.0+3
+  flutter_bloc: ^8.1.6
+  shared_preferences: ^2.3.5
+  camera: ^0.11.0+2
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.19.0
+  image_picker: ^0.8.7+5
+  google_mlkit_text_recognition: ^0.14.0
+  flutter_secure_storage: ^9.2.4
+  uuid: ^4.5.1
 
 dev_dependencies:
   flutter_test:
@@ -20,5 +33,26 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
+  assets: 
+  - lib/assets/svg/
+  - lib/assets/png/
+
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: lib/assets/font/Lato-Bold.ttf
+    - family: Lato_Light
+      fonts:
+        - asset: lib/assets/font/Lato-Light.ttf
+    - family: Lato_Regular
+      fonts:
+        - asset: lib/assets/font/Lato-Regular.ttf
+    - family: Lato_Thin
+      fonts:
+        - asset: lib/assets/font/Lato-Thin.ttf
+    - family: HappyMonkey
+      fonts:
+        - asset: lib/assets/font/HappyMonkey.ttf
 
 
