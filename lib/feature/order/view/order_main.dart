@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const CategoriesMain());
+  runApp(const OrderMain());
 }
 
-class CategoriesMain extends StatelessWidget {
-  const CategoriesMain({super.key});
+class OrderMain extends StatelessWidget {
+  const OrderMain({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class CategoriesMain extends StatelessWidget {
       home: Scaffold(
         body: Center(
           child: Text(
-            'Categories Page',
+            'Order Page',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
