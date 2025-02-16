@@ -9,9 +9,19 @@ class HomeMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
-        body: Container(), // Trang trống
+        body: Center(
+          child: Text(
+            'Home Page',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
       ),
     );
   }

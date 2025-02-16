@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const CategoriesMain());
+  runApp(const NofiMain());
 }
 
-class CategoriesMain extends StatelessWidget {
-  const CategoriesMain({super.key});
+class NofiMain extends StatelessWidget {
+  const NofiMain({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class CategoriesMain extends StatelessWidget {
       home: Scaffold(
         body: Center(
           child: Text(
-            'Categories Page',
+            'Nofi Page',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
