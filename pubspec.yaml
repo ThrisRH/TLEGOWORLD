@@ -37,6 +37,7 @@ flutter:
   assets: 
   - lib/assets/svg/
   - lib/assets/png/
+  - lib/assets/png/homepage_png/
   - lib/assets/svg/navbar_icon_active/
   - lib/assets/svg/navbar_icon_inactive/
 

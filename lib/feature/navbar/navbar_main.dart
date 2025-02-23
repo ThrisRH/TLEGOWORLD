@@ -48,35 +48,22 @@ class _MainPageState extends State<Navbar> {
             _currentIndex = index;
           });
         },
-        backgroundColor: const Color.fromARGB(255, 253, 253, 253),
-        selectedItemColor: Colors.white, // Màu của mục được chọn
-        unselectedItemColor: Colors.grey, // Màu của mục chưa được chọn
-        items: [
-          BottomNavigationBarItem(
+        backgroundColor:
+            Colors.white, // ✅ Đổi màu navbar thành màu xanh (hoặc màu bạn muốn)
+        selectedItemColor: Colors.white, // ✅ Màu của icon khi được chọn
+        unselectedItemColor: Colors.grey, // ✅ Màu của icon chưa chọn
+        type: BottomNavigationBarType
+            .fixed, // ✅ Giữ icon tĩnh, không bị co giãn khi chọn
+        items: List.generate(4, (index) {
+          return BottomNavigationBarItem(
             icon: SvgPicture.asset(
-              _currentIndex == 0 ? _selectedIcons[0] : _defaultIcons[0],
+              _currentIndex == index
+                  ? _selectedIcons[index]
+                  : _defaultIcons[index],
             ),
             label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              _currentIndex == 1 ? _selectedIcons[1] : _defaultIcons[1],
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              _currentIndex == 2 ? _selectedIcons[2] : _defaultIcons[2],
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              _currentIndex == 3 ? _selectedIcons[3] : _defaultIcons[3],
-            ),
-            label: '',
-          ),
-        ],
+          );
+        }),
       ),
     );
   }

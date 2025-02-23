@@ -8,6 +8,7 @@ class PlashPages extends StatelessWidget {
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(builder: (context) => const Navbar()),
       );
@@ -17,17 +18,8 @@ class PlashPages extends StatelessWidget {
       body: Center(
         child: Image.asset(
           'lib/assets/png/app_logo.png', // Đường dẫn đúng tới file PNG
-          // width: 150,
-          // height: 150,
         ),
       ),
     );
   }
-
-  static const TextStyle nameapp = TextStyle(
-    fontSize: 40,
-    fontWeight: FontWeight.bold,
-    fontFamily: 'HappyMonkey',
-  );
-  static const TextStyle txtapp = TextStyle(fontSize: 16, fontFamily: 'Lato');
 }
