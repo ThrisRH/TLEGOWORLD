@@ -1,0 +1,2 @@
+C:/Users/ADMIN/OneDrive/Documents/CodingHW/Flutter/TLego/TLEGOWORLD/android/app/.cxx/RelWithDebInfo/6u1u3u6k/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/ADMIN/OneDrive/Documents/CodingHW/Flutter/TLego/TLEGOWORLD/android/app/.cxx/RelWithDebInfo/6u1u3u6k/armeabi-v7a/CMakeFiles/rebuild_cache.dir
