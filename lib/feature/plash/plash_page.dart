@@ -1,32 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:tlego_world/feature/navbar/navbar_main.dart';
 
-class PlashPages extends StatefulWidget {
+class PlashPages extends StatelessWidget {
   const PlashPages({super.key});
 
   @override
-  State<PlashPages> createState() => _PlashPagesState();
-}
-
-class _PlashPagesState extends State<PlashPages> {
-  @override
-  void initState() {
-    super.initState();
-    // Sau 3 giây, chuyển sang Navbar
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Navbar(),
-          ),
-        );
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(builder: (context) => const Navbar()),
+      );
+    });
+
     return Scaffold(
       body: Center(
         child: Image.asset(
