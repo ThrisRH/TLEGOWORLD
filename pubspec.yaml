@@ -1,7 +1,7 @@
 name: tlego_world
 description: "A new Flutter project."
 
-publish_to: 'none' 
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -24,7 +24,11 @@ dependencies:
   image_picker: ^0.8.7+5
   google_mlkit_text_recognition: ^0.14.0
   flutter_secure_storage: ^9.2.4
+  flutter_dash: ^1.0.0
   uuid: ^4.5.1
+  firebase_auth: ^5.5.1
+  fluttertoast: ^8.2.12
+  firebase_core: ^3.12.1
 
 dev_dependencies:
   flutter_test:
@@ -34,12 +38,12 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
-  assets: 
-  - lib/assets/svg/
-  - lib/assets/png/
-  - lib/assets/png/homepage_png/
-  - lib/assets/svg/navbar_icon_active/
-  - lib/assets/svg/navbar_icon_inactive/
+  assets:
+    - lib/assets/svg/
+    - lib/assets/png/
+    - lib/assets/png/homepage_png/
+    - lib/assets/svg/navbar_icon_active/
+    - lib/assets/svg/profile_icon/
 
   fonts:
     - family: Lato
@@ -57,5 +61,3 @@ flutter:
     - family: HappyMonkey
       fonts:
         - asset: lib/assets/font/HappyMonkey.ttf
-
-

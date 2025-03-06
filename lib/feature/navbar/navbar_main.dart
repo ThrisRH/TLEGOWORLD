@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tlego_world/assets/color/colors.dart';
 import 'package:tlego_world/feature/categories/app.dart';
 import 'package:tlego_world/feature/home/app.dart';
 import 'package:tlego_world/feature/order/app.dart';
@@ -20,21 +21,20 @@ class _MainPageState extends State<Navbar> {
     const HomeMain(),
     const CategoriesMain(),
     const OrderMain(),
-    const NofiMain(),
+    const ProfileMain(),
   ];
 
-  final List<String> _selectedIcons = [
+  final List<String> _tabIcons = [
     'lib/assets/svg/navbar_icon_active/home_icon.svg',
     'lib/assets/svg/navbar_icon_active/cate_icon.svg',
     'lib/assets/svg/navbar_icon_active/order_icon.svg',
     'lib/assets/svg/navbar_icon_active/nofi_icon.svg',
   ];
-
-  final List<String> _defaultIcons = [
-    'lib/assets/svg/navbar_icon_inactive/home_icon.svg',
-    'lib/assets/svg/navbar_icon_inactive/cate_icon.svg',
-    'lib/assets/svg/navbar_icon_inactive/order_icon.svg',
-    'lib/assets/svg/navbar_icon_inactive/nofi_icon.svg',
+  final List<String> _tabTitle = [
+    'Trang chủ',
+    'Danh mục',
+    'Đơn hàng',
+    'Cá nhân',
   ];
 
   @override
@@ -42,51 +42,43 @@ class _MainPageState extends State<Navbar> {
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: SizedBox(
-        child: Theme(
-          data: Theme.of(context).copyWith(
-            splashColor: Colors.transparent, // Tắt hiệu ứng sóng nước
-            highlightColor: Colors.transparent, // Tắt hiệu ứng sáng khi bấm
-            hoverColor: Colors.transparent, // Tắt hiệu ứng hover
-          ),
-          child: BottomNavigationBar(
-            enableFeedback: false,
-            type: BottomNavigationBarType.fixed,
-            currentIndex: _currentIndex,
-            onTap: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            backgroundColor: Colors.white,
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.grey,
-            items: [
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  _currentIndex == 0 ? _selectedIcons[0] : _defaultIcons[0],
-                ),
-                label: '',
+        height: 64,
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          backgroundColor: Colors
+              .white, // ✅ Đổi màu navbar thành màu xanh (hoặc màu bạn muốn)
+          selectedItemColor: AppColor.primary, // ✅ Màu của icon khi được chọn
+          unselectedItemColor: AppColor.normalGray, // ✅ Màu của icon chưa chọn
+          unselectedLabelStyle: const TextStyle(fontSize: 12),
+          selectedLabelStyle:
+              const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          type: BottomNavigationBarType
+              .fixed, // ✅ Giữ icon tĩnh, không bị co giãn khi chọn
+          items: List.generate(4, (index) {
+            return BottomNavigationBarItem(
+              icon: Column(
+                children: [
+                  SvgPicture.asset(
+                    _tabIcons[index],
+                    color: _currentIndex == index
+                        ? AppColor.primary
+                        : AppColor.normalGray,
+                    width: 16,
+                    height: 16,
+                  ),
+                  const SizedBox(
+                    height: 6,
+                  )
+                ],
               ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  _currentIndex == 1 ? _selectedIcons[1] : _defaultIcons[1],
-                ),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  _currentIndex == 2 ? _selectedIcons[2] : _defaultIcons[2],
-                ),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  _currentIndex == 3 ? _selectedIcons[3] : _defaultIcons[3],
-                ),
-                label: '',
-              ),
-            ],
-          ),
+              label: _tabTitle[index],
+            );
+          }),
         ),
       ),
     );

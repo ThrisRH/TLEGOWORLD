@@ -1,8 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tlego_world/feature/navbar/navbar_main.dart';
 import 'package:tlego_world/feature/plash/plash_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp();
+    print('Đã kết nối Firebase');
+  } catch (e) {
+    print('Lỗi kết nối FB');
+  }
   runApp(const MyApp());
 }
 
