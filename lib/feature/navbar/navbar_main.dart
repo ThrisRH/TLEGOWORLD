@@ -4,7 +4,7 @@ import 'package:tlego_world/assets/color/colors.dart';
 import 'package:tlego_world/feature/categories/app.dart';
 import 'package:tlego_world/feature/home/app.dart';
 import 'package:tlego_world/feature/order/app.dart';
-import 'package:tlego_world/feature/nofi/app.dart';
+import 'package:tlego_world/feature/user/app.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({super.key});

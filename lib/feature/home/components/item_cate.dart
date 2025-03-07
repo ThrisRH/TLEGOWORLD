@@ -1,29 +1,45 @@
 import 'package:flutter/material.dart';
 
 class ImageGrid extends StatelessWidget {
-  final List<String> images;
-  final int imagesPerRow; // Số ảnh trên mỗi dòng
+  final List<dynamic> images; // Chấp nhận List<dynamic>
+  final int imagesPerRow;
+  final Function(String) onImageTap;
 
-  const ImageGrid({super.key, required this.images, this.imagesPerRow = 4});
+  const ImageGrid({
+    super.key,
+    required this.images,
+    this.imagesPerRow = 4,
+    required this.onImageTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double spacing = 8; // Khoảng cách giữa các ảnh
+    double spacing = 8;
     double itemSize =
         (screenWidth - (spacing * (imagesPerRow - 1))) / imagesPerRow;
 
     return Wrap(
-      spacing: spacing, // Khoảng cách ngang giữa ảnh
-      runSpacing: spacing, // Khoảng cách dọc giữa ảnh
+      spacing: spacing,
+      runSpacing: spacing,
       children: images.map((imagePath) {
-        return SizedBox(
-          width: itemSize,
-          child: Image.asset(
-            imagePath,
+        String imageUrl = imagePath is String
+            ? imagePath
+            : imagePath.toString(); // Ép kiểu về String
+        return GestureDetector(
+          onTap: () => onImageTap(imageUrl),
+          child: SizedBox(
             width: itemSize,
             height: itemSize,
-            fit: BoxFit.cover,
+            child: Image.network(
+              // Thay vì Image.asset, đổi thành Image.network nếu ảnh từ URL
+              imageUrl,
+              width: itemSize,
+              height: itemSize,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.broken_image), // Xử lý lỗi ảnh
+            ),
           ),
         );
       }).toList(),
