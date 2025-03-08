@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tlego_world/components/search.dart';
+import 'package:tlego_world/feature/ProductList/view/ProductList_main.dart';
 import 'package:tlego_world/feature/categories/components/item.dart';
 import 'package:tlego_world/components/data_api/categories_data.dart';
 
@@ -30,6 +31,20 @@ class _CategoriesMainState extends State<CategoriesMain> {
       categoriesList = data;
       isLoading = false;
     });
+  }
+
+  void navigateToCategoryDetail(BuildContext context, String categoryTitle,
+      String cate, int categoryCount) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductListScreen(
+          title: categoryTitle,
+          cate: cate,
+          count: categoryCount,
+        ),
+      ),
+    );
   }
 
   @override
@@ -69,7 +84,17 @@ class _CategoriesMainState extends State<CategoriesMain> {
                                   imageUrl: category['image'],
                                   title: category['title'],
                                   itemCount: category['count'],
-                                  onTap: () {},
+                                  onTap: () {
+                                    navigateToCategoryDetail(
+                                      context,
+                                      category['title'],
+                                      category['cate'],
+                                      category['count'] is int
+                                          ? category['count']
+                                          : int.parse(
+                                              category['count'].toString()),
+                                    );
+                                  },
                                 );
                               },
                             ),
