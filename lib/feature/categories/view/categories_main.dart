@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tlego_world/assets/color/colors.dart';
+import 'package:tlego_world/components/cart_button.dart';
+import 'package:tlego_world/feature/categories/cart_page.dart';
 import 'package:tlego_world/feature/categories/components/item.dart';
 
 void main() {
@@ -111,13 +113,8 @@ class CategoriesMain extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12), // Khoảng cách giữa 2 phần
-                      GestureDetector(
-                        onTap: () {},
-                        child: const Icon(
-                          Icons.shopping_cart_outlined,
-                          color: Color(0xFF28282B),
-                        ),
-                      )
+
+                      const CartButton(),
                     ],
                   ),
                 ),
