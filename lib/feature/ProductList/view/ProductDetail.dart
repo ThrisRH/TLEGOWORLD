@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tlego_world/components/button.dart';
 import 'package:tlego_world/components/data_api/product_detail_data.dart';
 import 'package:tlego_world/components/ListBar.dart';
+import 'package:tlego_world/feature/ProductList/components/add_product_popup.dart';
 import 'package:tlego_world/feature/ProductList/components/pro_description.dart';
 import 'package:intl/intl.dart';
 
@@ -45,6 +46,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         isLoading = false;
       });
     }
+  }
+
+  void _showBuyNowPopup() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (context) {
+        return BuyNowPopup(
+          productName: productData!['pro_name'],
+          productImage: productData!['pro_img'],
+          productPrice: productData!['pro_price'],
+          onConfirm: () {
+            Navigator.pop(context);
+            // Thực hiện hành động mua hàng
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -102,13 +124,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         children: [
                           Expanded(
                             child: RedButton(
-                              onPressed: () => (),
+                              onPressed: _showBuyNowPopup,
                               text: 'MUA NGAY',
                             ),
                           ),
                           const SizedBox(width: 8),
                           ShoppingButton(
-                            onPressed: () => (),
+                            onPressed: _showBuyNowPopup,
                           ),
                         ],
                       ),
