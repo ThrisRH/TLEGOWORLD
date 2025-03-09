@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tlego_world/components/data_api/product_data.dart';
-import 'package:tlego_world/feature/ProductList/components/ListBar.dart';
-import 'package:tlego_world/feature/ProductList/components/product_cart.dart'; // Import file API
+import 'package:tlego_world/components/ListBar.dart';
+import 'package:tlego_world/feature/ProductList/components/product_cart.dart';
 
 class ProductListScreen extends StatefulWidget {
   final String title;
@@ -30,14 +30,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: ListAppBar(title: widget.title),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 35),
-            ListAppBar(title: widget.title),
-            const SizedBox(height: 15),
             Align(
               alignment: Alignment.center,
               child: Text(
@@ -77,6 +75,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       title: product['pro_name'],
                       price: product['pro_price'],
                       sold: product['sales_count'],
+                      proID: product['pro_ID'],
                     );
                   },
                 );

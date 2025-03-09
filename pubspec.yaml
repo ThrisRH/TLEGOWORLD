@@ -44,6 +44,7 @@ flutter:
     - lib/assets/png/homepage_png/
     - lib/assets/images/
     - lib/assets/svg/navbar_icon_active/
+    - lib/assets/svg/components/
 
     # - lib/assets/svg/profile_icon/
 
