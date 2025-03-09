@@ -44,8 +44,10 @@ flutter:
     - lib/assets/images/lego_pics/
     - lib/assets/images/products/
     - lib/assets/png/homepage_png/
+    - lib/assets/images/
     - lib/assets/svg/navbar_icon_active/
-    - lib/assets/svg/profile_icon/
+
+    # - lib/assets/svg/profile_icon/
 
   fonts:
     - family: Lato

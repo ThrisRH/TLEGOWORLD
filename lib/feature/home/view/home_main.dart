@@ -1,55 +1,84 @@
 import 'package:flutter/material.dart';
+import 'package:tlego_world/components/data_api/categories_data.dart';
+import 'package:tlego_world/components/search.dart';
 import 'package:tlego_world/feature/home/components/item_cate.dart';
 import 'package:tlego_world/feature/home/view/components/text_titlte.dart';
-// Import component
 
 void main() {
   runApp(const HomeMain());
 }
 
-class HomeMain extends StatelessWidget {
+class HomeMain extends StatefulWidget {
   const HomeMain({super.key});
+
+  @override
+  _HomeMainState createState() => _HomeMainState();
+}
+
+class _HomeMainState extends State<HomeMain> {
+  List<Map<String, dynamic>> categoriesList = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadCategories();
+  }
+
+  Future<void> loadCategories() async {
+    final categoriesData = await FetchCategories.fetchData();
+    setState(() {
+      // Chỉ lấy danh sách ảnh
+      categoriesList = categoriesData
+          .map((category) => {"image": category["image"]})
+          .toList();
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: Scaffold(
         backgroundColor: Colors.white,
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(12), // Thêm padding 12px
-            child: Column(
-              children: [
-                Image.asset(
-                  'lib/assets/png/homepage_png/banner.png',
+        body: Column(
+          children: [
+            SearchBarbtn(onCartTap: () {}),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      Image.asset('lib/assets/png/homepage_png/banner.png'),
+                      const SectionTitle(title: 'DANH MỤC TIÊU BIỂU'),
+                      isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : ImageGrid(
+                              images: categoriesList
+                                  .map((category) => category['image'])
+                                  .toList(), // ✅ Chỉ lấy danh sách ảnh
+                              imagesPerRow: 5,
+                              onImageTap: (String imagePath) {},
+                            ),
+                      const SectionTitle(title: 'SẢN PHẨM MỚI'),
+                      isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : ImageGrid(
+                              images: categoriesList
+                                  .map((category) => category['image'])
+                                  .toList(), // ✅ Chỉ lấy danh sách ảnh
+                              imagesPerRow: 5,
+                              onImageTap: (String imagePath) {},
+                            ),
+                    ],
+                  ),
                 ),
-                const SectionTitle(title: 'DANH MỤC TIÊU BIỂU'),
-                const ImageGrid(
-                  images: [
-                    'lib/assets/png/homepage_png/city.png',
-                    'lib/assets/png/homepage_png/Tech.png',
-                    'lib/assets/png/homepage_png/nijja.png',
-                    'lib/assets/png/homepage_png/creator.png',
-                    'lib/assets/png/homepage_png/friend.png',
-                    'lib/assets/png/homepage_png/disney.png',
-                    'lib/assets/png/homepage_png/nijja.png',
-                  ],
-                  imagesPerRow: 4,
-                ),
-                const SectionTitle(title: 'SẢN PHẨM MỚI'),
-                const ImageGrid(
-                  images: [
-                    'lib/assets/png/homepage_png/lego_conquay.png',
-                    'lib/assets/png/homepage_png/lego_nija.png',
-                    'lib/assets/png/homepage_png/lego_white.png',
-                    'lib/assets/png/homepage_png/lego_xedua.png',
-                    'lib/assets/png/homepage_png/lego_tech_black.png',
-                    'lib/assets/png/homepage_png/lego_black.png',
-                  ],
-                ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
