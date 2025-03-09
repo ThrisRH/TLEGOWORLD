@@ -12,9 +12,11 @@ class FetchCategories {
 
         return data.values.map((item) {
           return {
-            "image": item["imgurl"] ?? "https://via.placeholder.com/150",
+            "image": item["imgurl"] ??
+                "https://res.cloudinary.com/dcdaz0dzb/image/upload/v1741319528/wkdf9oqfmsalior18bl0.png",
             "title": item["cate_name"] ?? "Không có tên",
             "count": item["cateitem_count"] ?? 0,
+            "cate": item["cate_id"] ?? "Không có cate",
           };
         }).toList();
       } else {

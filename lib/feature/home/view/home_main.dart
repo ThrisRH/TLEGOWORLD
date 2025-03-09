@@ -28,9 +28,11 @@ class _HomeMainState extends State<HomeMain> {
   Future<void> loadCategories() async {
     final categoriesData = await FetchCategories.fetchData();
     setState(() {
-      // Chỉ lấy danh sách ảnh
       categoriesList = categoriesData
-          .map((category) => {"image": category["image"]})
+          .map((category) => {
+                "image": category["image"],
+                "title": category["title"],
+              })
           .toList();
       isLoading = false;
     });
@@ -45,33 +47,49 @@ class _HomeMainState extends State<HomeMain> {
         backgroundColor: Colors.white,
         body: Column(
           children: [
-            SearchBarbtn(onCartTap: () {}),
+            const SizedBox(
+              height: 35,
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Column(
                     children: [
+                      SearchBarbtn(onCartTap: () {}),
+                      const SizedBox(
+                        height: 30,
+                      ),
                       Image.asset('lib/assets/png/homepage_png/banner.png'),
                       const SectionTitle(title: 'DANH MỤC TIÊU BIỂU'),
                       isLoading
                           ? const Center(child: CircularProgressIndicator())
                           : ImageGrid(
                               images: categoriesList
-                                  .map((category) => category['image'])
-                                  .toList(), // ✅ Chỉ lấy danh sách ảnh
+                                  .map((category) =>
+                                      category['image']?.toString() ?? '')
+                                  .toList(),
                               imagesPerRow: 5,
                               onImageTap: (String imagePath) {},
+                              title: categoriesList
+                                  .map((category) =>
+                                      category['title']?.toString() ?? '')
+                                  .toList(),
                             ),
                       const SectionTitle(title: 'SẢN PHẨM MỚI'),
                       isLoading
                           ? const Center(child: CircularProgressIndicator())
                           : ImageGrid(
                               images: categoriesList
-                                  .map((category) => category['image'])
-                                  .toList(), // ✅ Chỉ lấy danh sách ảnh
+                                  .map((category) =>
+                                      category['image']?.toString() ?? '')
+                                  .toList(),
                               imagesPerRow: 5,
                               onImageTap: (String imagePath) {},
+                              title: categoriesList
+                                  .map((category) =>
+                                      category['title']?.toString() ?? '')
+                                  .toList(),
                             ),
                     ],
                   ),

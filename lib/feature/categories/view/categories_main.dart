@@ -1,54 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:tlego_world/assets/color/colors.dart';
-import 'package:tlego_world/components/cart_button.dart';
-import 'package:tlego_world/feature/categories/cart_page.dart';
+import 'package:tlego_world/components/search.dart';
+import 'package:tlego_world/feature/ProductList/view/ProductList_main.dart';
 import 'package:tlego_world/feature/categories/components/item.dart';
+import 'package:tlego_world/components/data_api/categories_data.dart';
 
 void main() {
   runApp(const CategoriesMain());
 }
 
-// Danh sách danh mục mẫu
-final List<Map<String, dynamic>> categories = [
-  {
-    "image": "lib/assets/images/ninjago_cate.png",
-    "title": "LEGO City",
-    "count": 120,
-  },
-  {
-    "image": "lib/assets/images/ninjago_cate.png",
-    "title": "LEGO City",
-    "count": 120,
-  },
-  {
-    "image": "lib/assets/images/ninjago_cate.png",
-    "title": "LEGO City",
-    "count": 120,
-  },
-  {
-    "image": "lib/assets/images/ninjago_cate.png",
-    "title": "LEGO City",
-    "count": 120,
-  },
-  {
-    "image": "lib/assets/images/ninjago_cate.png",
-    "title": "LEGO City",
-    "count": 120,
-  },
-  {
-    "image": "lib/assets/images/ninjago_cate.png",
-    "title": "LEGO City",
-    "count": 120,
-  },
-  {
-    "image": "lib/assets/images/ninjago_cate.png",
-    "title": "LEGO City",
-    "count": 120,
-  },
-];
-
-class CategoriesMain extends StatelessWidget {
+class CategoriesMain extends StatefulWidget {
   const CategoriesMain({super.key});
+
+  @override
+  _CategoriesMainState createState() => _CategoriesMainState();
+}
+
+class _CategoriesMainState extends State<CategoriesMain> {
+  List<Map<String, dynamic>> categoriesList = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadCategories();
+  }
+
+  Future<void> loadCategories() async {
+    final data = await FetchCategories.fetchData();
+    setState(() {
+      categoriesList = data;
+      isLoading = false;
+    });
+  }
+
+  void navigateToCategoryDetail(BuildContext context, String categoryTitle,
+      String cate, int categoryCount) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductListScreen(
+          title: categoryTitle,
+          cate: cate,
+          count: categoryCount,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,95 +57,48 @@ class CategoriesMain extends StatelessWidget {
             width: double.infinity,
             child: Column(
               children: [
-                // search bar
-                SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Expanded(
-                          flex: 4,
-                          child: TextField(
-                            decoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.symmetric(vertical: 12),
-                              prefixIcon: Container(
-                                width: 32,
-                                height: 32,
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 12),
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColor.primary,
-                                ),
-                                child: const Icon(
-                                  Icons.more_horiz_rounded,
-                                  color: Colors.white,
-                                ),
+                SearchBarbtn(
+                  onCartTap: () {},
+                ),
+                const SizedBox(height: 24),
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : categoriesList.isEmpty
+                        ? const Center(child: Text("Không có danh mục nào"))
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                                childAspectRatio: 0.8,
                               ),
-                              suffixIcon: const Icon(
-                                Icons.search,
-                                color: AppColor.primary,
-                              ),
-                              hintText: 'Tìm kiếm sản phẩm bạn quan tâm',
-                              hintStyle:
-                                  const TextStyle(color: AppColor.normalGray),
-                              filled: true,
-                              fillColor:
-                                  const Color.fromARGB(255, 241, 241, 241),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(24),
-                                borderSide: BorderSide.none,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(24),
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(24),
-                                borderSide: BorderSide.none,
-                              ),
+                              itemCount: categoriesList.length,
+                              itemBuilder: (context, index) {
+                                final category = categoriesList[index];
+                                return CategoryCard(
+                                  imageUrl: category['image'],
+                                  title: category['title'],
+                                  itemCount: category['count'],
+                                  onTap: () {
+                                    navigateToCategoryDetail(
+                                      context,
+                                      category['title'],
+                                      category['cate'],
+                                      category['count'] is int
+                                          ? category['count']
+                                          : int.parse(
+                                              category['count'].toString()),
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(width: 12), // Khoảng cách giữa 2 phần
-
-                      const CartButton(),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: GridView.builder(
-                    shrinkWrap: true, // Để GridView không chiếm hết không gian
-                    physics:
-                        NeverScrollableScrollPhysics(), // Tắt cuộn trong GridView
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // 2 cột
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      childAspectRatio:
-                          0.8, // Tỉ lệ chiều rộng/chiều cao của mỗi item
-                    ),
-                    itemCount: categories.length,
-                    itemBuilder: (context, index) {
-                      final category = categories[index];
-                      return CategoryCard(
-                        imageUrl: category['image'],
-                        title: category['title'],
-                        itemCount: category['count'],
-                        onTap: () {
-                          print("Chọn danh mục: ${category['title']}");
-                        },
-                      );
-                    },
-                  ),
-                )
               ],
             ),
           ),
