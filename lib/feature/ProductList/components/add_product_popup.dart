@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tlego_world/components/QuantitySelector.dart';
-import 'package:tlego_world/components/button.dart';
+import 'package:tlego_world/components/component/QuantitySelector.dart';
+import 'package:tlego_world/components/component/button.dart';
 
 class BuyNowPopup extends StatelessWidget {
   final String productName;

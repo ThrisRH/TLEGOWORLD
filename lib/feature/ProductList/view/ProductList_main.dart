@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tlego_world/components/data_api/product_data.dart';
-import 'package:tlego_world/components/ListBar.dart';
+import 'package:tlego_world/components/component/ListBar.dart';
 import 'package:tlego_world/feature/ProductList/components/product_cart.dart';
 
 class ProductListScreen extends StatefulWidget {

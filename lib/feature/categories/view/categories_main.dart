@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tlego_world/components/search.dart';
+import 'package:tlego_world/components/component/search.dart';
 import 'package:tlego_world/feature/ProductList/view/ProductList_main.dart';
 import 'package:tlego_world/feature/categories/components/item.dart';
 import 'package:tlego_world/components/data_api/categories_data.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tlego_world/components/data_api/categories_data.dart';
-import 'package:tlego_world/components/search.dart';
+import 'package:tlego_world/components/component/search.dart';
 import 'package:tlego_world/feature/home/components/item_cate.dart';
 import 'package:tlego_world/feature/home/view/components/text_titlte.dart';
 
