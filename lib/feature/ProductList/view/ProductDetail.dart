@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tlego_world/assets/color/colors.dart';
 import 'package:tlego_world/components/button.dart';
 import 'package:tlego_world/components/data_api/product_detail_data.dart';
 import 'package:tlego_world/components/ListBar.dart';
 import 'package:tlego_world/feature/ProductList/components/add_product_popup.dart';
 import 'package:tlego_world/feature/ProductList/components/pro_description.dart';
 import 'package:intl/intl.dart';
+import 'package:tlego_world/services/auth_helper.dart';
+import 'package:tlego_world/services/cart_service.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final String proID;
@@ -19,10 +23,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Map<String, dynamic>? productData;
   bool isLoading = true;
   String errorMessage = '';
+  String userId = "";
 
   @override
   void initState() {
     super.initState();
+    userId = AuthHelper.getUserId();
     fetchProductData();
   }
 
@@ -60,7 +66,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           productName: productData!['pro_name'],
           productImage: productData!['pro_img'],
           productPrice: productData!['pro_price'],
-          onConfirm: () {
+          onConfirm: () async {
+            bool success = await CartService.addUserCart(userId, widget.proID);
+            if (success) {
+              Fluttertoast.showToast(
+                  msg: 'Thêm thành công',
+                  backgroundColor: AppColor.normalGray.withOpacity(0.3));
+            } else {
+              Fluttertoast.showToast(msg: 'Thất bại');
+            }
             Navigator.pop(context);
             // Thực hiện hành động mua hàng
           },

@@ -65,7 +65,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     crossAxisCount: 2, // 2 sản phẩm mỗi hàng
                     crossAxisSpacing: 20,
                     mainAxisSpacing: 15,
-                    childAspectRatio: 0.7,
+                    childAspectRatio: 0.6,
                   ),
                   itemCount: products.length,
                   itemBuilder: (context, index) {
