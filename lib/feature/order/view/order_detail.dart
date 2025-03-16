@@ -1,21 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:tlego_world/components/component/ListBar.dart';
+import 'package:tlego_world/components/component/button.dart';
+import 'package:tlego_world/components/data_api/add_rating_data.dart';
+import 'package:tlego_world/components/data_api/delete_orderdetail.dart';
 import 'package:tlego_world/feature/order/components/info_cus.dart';
 import 'package:tlego_world/feature/order/components/order_item.dart';
 import 'package:tlego_world/feature/order/components/status_order.dart';
 import 'package:tlego_world/feature/order/components/total_order.dart';
 
-class OrderDetail extends StatelessWidget {
+class OrderDetail extends StatefulWidget {
   final Map<String, dynamic> orderData;
 
   const OrderDetail({super.key, required this.orderData});
 
   @override
+  _OrderDetailState createState() => _OrderDetailState();
+}
+
+class _OrderDetailState extends State<OrderDetail> {
+  bool isDeleting = false; // Trạng thái để kiểm soát loading
+
+  void handleDelete(String orderId) async {
+    setState(() {
+      isDeleting = true; // Hiển thị vòng load
+    });
+
+    try {
+      bool deleteOrderItemSuccess = await deleteOrderItem(orderId);
+      if (!deleteOrderItemSuccess) {
+        throw Exception("Xóa orderitem thất bại!");
+      }
+
+      bool deleteOrderDetailSuccess = await deleteOrder(orderId);
+      if (deleteOrderDetailSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Xóa đơn hàng thành công!")),
+        );
+        Navigator.pop(context);
+      } else {
+        throw Exception("Xóa orderdetail thất bại!");
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Lỗi: $e")),
+      );
+    }
+
+    setState(() {
+      isDeleting = false;
+    });
+  }
+
+  void sendFakeRating(String orderId) async {
+    await TransactionService.saveTransaction(
+      context: context,
+      id: orderId,
+      rating: 5,
+      review: 'Giao hàng lâu',
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    String orderId = orderData['order_id'] ?? "Không có";
-    String orderStatus = orderData['order_status'] ?? "Chưa rõ";
-    String cusid = orderData['cus_id'] ?? "Chưa rõ";
-    String date = orderData['order_date'] ?? "Chưa rõ";
+    String orderId = widget.orderData['order_id'] ?? "Không có";
+    String orderStatus = widget.orderData['order_status'] ?? "Chưa rõ";
+    String cusid = widget.orderData['cus_id'] ?? "Chưa rõ";
+    String date = widget.orderData['order_date'] ?? "Chưa rõ";
+    String id = widget.orderData['id'] ?? "Chưa rõ";
 
     return Scaffold(
       appBar: const ListAppBar(title: 'CHI TIẾT ĐƠN HÀNG'),
@@ -27,18 +78,25 @@ class OrderDetail extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               OrderStatusBar(orderId: orderId, orderStatus: orderStatus),
+              Text(id),
               const SizedBox(height: 32),
               CustomerInfo(cusid: cusid),
               const SizedBox(height: 32),
-              InvoiceComponent(
-                orderId: orderId,
-                date: date,
-              ),
+              InvoiceComponent(orderId: orderId, date: date),
               const SizedBox(height: 32),
-              TotalOrder(
-                cusid: cusid,
-                orderid: orderId,
-              )
+              TotalOrder(cusid: cusid, orderid: orderId),
+              const SizedBox(height: 32),
+              if (orderStatus == "chờ vận chuyển")
+                CancelButton(
+                  onPressed: isDeleting ? null : () => handleDelete(orderId),
+                  isDeleting: isDeleting,
+                  text: 'Hủy đơn',
+                )
+              else if (orderStatus == "nhận hàng")
+                RatingButton(
+                  onPressed: () => sendFakeRating(orderId),
+                  text: 'Đánh giá',
+                ),
             ],
           ),
         ),

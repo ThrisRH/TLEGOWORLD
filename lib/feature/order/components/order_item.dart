@@ -98,7 +98,8 @@ class _InvoiceComponentState extends State<InvoiceComponent> {
         children: [
           // Hình ảnh sản phẩm
           Image.network(
-            item['pro_img'] ?? "",
+            item['pro_img'] ??
+                "https://res.cloudinary.com/dcdaz0dzb/image/upload/v1741355025/6849b27b-c672-4066-af76-0658e85b1005.png",
             width: 76,
             height: 108,
             fit: BoxFit.cover,

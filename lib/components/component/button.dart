@@ -61,3 +61,103 @@ class ShoppingButton extends StatelessWidget {
     );
   }
 }
+
+class CancelButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final bool isDeleting;
+  final String text; // Biến để thay đổi nội dung nút
+
+  const CancelButton({
+    Key? key,
+    required this.onPressed,
+    this.isDeleting = false,
+    this.text = '', // Giá trị mặc định là "Hủy đơn"
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: isDeleting ? null : onPressed, // Vô hiệu hóa khi đang xóa
+      child: Container(
+        width: double.infinity, // Chiếm toàn bộ chiều rộng
+        padding: const EdgeInsets.symmetric(vertical: 12), // Tăng chiều cao nút
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFFE1001A),
+            width: 2,
+          ), // Viền đỏ
+          borderRadius: BorderRadius.circular(12), // Bo góc
+          color: Colors.white, // Nền trắng
+        ),
+        alignment: Alignment.center, // Canh giữa nội dung
+        child: isDeleting
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFE1001A)),
+                ),
+              ) // Vòng load
+            : Text(
+                text, // Sử dụng biến text
+                style: const TextStyle(
+                  color: Color(0xFFE1001A), // Chữ màu đỏ
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+class RatingButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final bool isDeleting;
+  final String text; // Biến để thay đổi nội dung nút
+
+  const RatingButton({
+    Key? key,
+    required this.onPressed,
+    this.isDeleting = false,
+    this.text = '', // Giá trị mặc định là "Hủy đơn"
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: isDeleting ? null : onPressed, // Vô hiệu hóa khi đang xóa
+      child: Container(
+        width: double.infinity, // Chiếm toàn bộ chiều rộng
+        padding: const EdgeInsets.symmetric(vertical: 12), // Tăng chiều cao nút
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFFFFD500),
+            width: 2,
+          ), // Viền đỏ
+          borderRadius: BorderRadius.circular(12), // Bo góc
+          color: Colors.white, // Nền trắng
+        ),
+        alignment: Alignment.center, // Canh giữa nội dung
+        child: isDeleting
+            ? const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFFD500)),
+                ),
+              ) // Vòng load
+            : Text(
+                text, // Sử dụng biến text
+                style: const TextStyle(
+                  color: Color(0xFFFFD500), // Chữ màu đỏ
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                ),
+              ),
+      ),
+    );
+  }
+}
