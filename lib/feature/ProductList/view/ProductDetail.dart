@@ -1,12 +1,7 @@
-// ignore_for_file: avoid_print, deprecated_member_use, use_build_context_synchronously, unnecessary_null_comparison
-
 import 'package:flutter/material.dart';
 import 'package:tlego_world/components/component/button.dart';
-
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tlego_world/assets/color/colors.dart';
-//import 'package:tlego_world/components/button.dart';
-
 import 'package:tlego_world/components/data_api/product_detail_data.dart';
 import 'package:tlego_world/components/component/ListBar.dart';
 import 'package:tlego_world/feature/ProductList/components/add_product_popup.dart';

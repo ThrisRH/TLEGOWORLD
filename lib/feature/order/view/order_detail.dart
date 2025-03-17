@@ -5,6 +5,7 @@ import 'package:tlego_world/components/data_api/add_rating_data.dart';
 import 'package:tlego_world/components/data_api/delete_orderdetail.dart';
 import 'package:tlego_world/feature/order/components/info_cus.dart';
 import 'package:tlego_world/feature/order/components/order_item.dart';
+import 'package:tlego_world/feature/order/components/rating.dart';
 import 'package:tlego_world/feature/order/components/status_order.dart';
 import 'package:tlego_world/feature/order/components/total_order.dart';
 
@@ -18,18 +19,14 @@ class OrderDetail extends StatefulWidget {
 }
 
 class _OrderDetailState extends State<OrderDetail> {
-  bool isDeleting = false; // Trạng thái để kiểm soát loading
+  bool isDeleting = false;
 
   void handleDelete(String orderId) async {
-    setState(() {
-      isDeleting = true; // Hiển thị vòng load
-    });
+    setState(() => isDeleting = true);
 
     try {
       bool deleteOrderItemSuccess = await deleteOrderItem(orderId);
-      if (!deleteOrderItemSuccess) {
-        throw Exception("Xóa orderitem thất bại!");
-      }
+      if (!deleteOrderItemSuccess) throw Exception("Xóa orderitem thất bại!");
 
       bool deleteOrderDetailSuccess = await deleteOrder(orderId);
       if (deleteOrderDetailSuccess) {
@@ -46,17 +43,29 @@ class _OrderDetailState extends State<OrderDetail> {
       );
     }
 
-    setState(() {
-      isDeleting = false;
-    });
+    setState(() => isDeleting = false);
   }
 
-  void sendFakeRating(String orderId) async {
-    await TransactionService.saveTransaction(
+  void showRatingPopup(String orderId) {
+    showDialog(
       context: context,
-      id: orderId,
-      rating: 5,
-      review: 'Giao hàng lâu',
+      builder: (BuildContext context) {
+        return RatingPopup(
+          onSubmit: (int rating, String review) async {
+            await TransactionService.saveTransaction(
+              context: context,
+              id: orderId,
+              rating: rating,
+              review: review,
+            );
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Gửi đánh giá thành công!")),
+              );
+            }
+          },
+        );
+      },
     );
   }
 
@@ -94,7 +103,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 )
               else if (orderStatus == "nhận hàng")
                 RatingButton(
-                  onPressed: () => sendFakeRating(orderId),
+                  onPressed: () => showRatingPopup(orderId),
                   text: 'Đánh giá',
                 ),
             ],
