@@ -157,8 +157,8 @@ class AuthService {
 
   static Future<Map<String, dynamic>?> getUserInfo(String userId) async {
     try {
-      final response = await http.get(Uri.parse(
-          "http://192.168.139.125:5000/api/customers/userInfo/$userId"));
+      final response = await http.get(
+          Uri.parse("http://3.25.92.254:5000/api/customers/userInfo/$userId"));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);

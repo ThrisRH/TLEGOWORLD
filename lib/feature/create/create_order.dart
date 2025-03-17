@@ -27,7 +27,6 @@ class _PaymentCheckingState extends State<PaymentChecking> {
   late Future<List<dynamic>> _cartFuture;
   double totalPrice = 0;
   int totalProduct = 0;
-
   // Random ship + voucher
   int total_shipping = getRandomAmount();
   int total_voucher = getRandomVoucher();
@@ -197,6 +196,7 @@ class _PaymentCheckingState extends State<PaymentChecking> {
                       onTap: () {
                         print(products.length);
                         String id = getRandomIDItem();
+                        String userId = AuthHelper.getUserId();
                         String imageFirst = "";
                         String proNameFirst = "";
                         double total_order = 0;
@@ -236,6 +236,13 @@ class _PaymentCheckingState extends State<PaymentChecking> {
                             order_status: "Đang chờ xác nhận",
                             pro_name: proNameFirst,
                             total_price: totalAll);
+
+                        CartService.clearUserCart(userId);
+
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const FinalStep()));
                       },
                       child: Container(
                         width: double.infinity,
@@ -311,6 +318,7 @@ class _UserInfoBoxState extends State<UserInfoBox> {
                     child: Text("Không có dữ liệu")); // Không có dữ liệu hợp lệ
               }
 
+              @override
               final userInfo = snapshot.data!;
               print('${userInfo}');
 

@@ -43,7 +43,7 @@ class FinalStep extends StatelessWidget {
                         height: 6,
                       ),
                       const Text(
-                        'Cảm ơn khách hàng Trần Hữu Minh Trí',
+                        'Cảm ơn bạn',
                         style: TextStyle(
                           fontSize: 14,
                           color: AppColor.normalGray,
