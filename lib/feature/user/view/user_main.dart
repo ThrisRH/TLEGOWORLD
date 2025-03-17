@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:tlego_world/assets/color/colors.dart';
 import 'package:tlego_world/feature/login/view/login_main.dart';
 import 'package:tlego_world/feature/navbar/navbar_main.dart';
+import 'package:tlego_world/feature/user/view/user_info_main.dart';
 import 'package:tlego_world/services/auth_helper.dart';
 import 'package:tlego_world/services/auth_service.dart';
 
@@ -126,7 +127,10 @@ class ProfileMain extends StatelessWidget {
                         color: AppColor.mateGray,
                       ),
                       onTap: () {
-                        // Xử lý khi nhấn vào "Thông tin cá nhân"
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const UserInformation()));
                       },
                     ),
                     ListTile(

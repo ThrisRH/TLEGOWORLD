@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, deprecated_member_use, use_build_context_synchronously, unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tlego_world/assets/color/colors.dart';
@@ -7,6 +9,7 @@ import 'package:tlego_world/components/ListBar.dart';
 import 'package:tlego_world/feature/ProductList/components/add_product_popup.dart';
 import 'package:tlego_world/feature/ProductList/components/pro_description.dart';
 import 'package:intl/intl.dart';
+import 'package:tlego_world/feature/login/view/login_main.dart';
 import 'package:tlego_world/services/auth_helper.dart';
 import 'package:tlego_world/services/cart_service.dart';
 
@@ -68,6 +71,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           productPrice: productData!['pro_price'],
           onConfirm: () async {
             bool success = await CartService.addUserCart(userId, widget.proID);
+            String? uid = AuthHelper.getUserId();
+
+            if (uid == null || uid.isEmpty || uid == "none") {
+              print('this');
+              _showLoginPopup();
+              return;
+            }
+            print('uid: $uid');
             if (success) {
               Fluttertoast.showToast(
                   msg: 'Thêm thành công',
@@ -80,6 +91,35 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           },
         );
       },
+    );
+  }
+
+  void _showLoginPopup() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Bạn chưa đăng nhập"),
+        content: const Text("Vui lòng đăng nhập để tiếp tục."),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Đóng"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const LoginPage())); // Điều hướng đến trang đăng nhập
+            },
+            child: Text("Đăng nhập"),
+          ),
+        ],
+      ),
     );
   }
 
