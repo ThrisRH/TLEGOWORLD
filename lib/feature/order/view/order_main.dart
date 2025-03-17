@@ -52,7 +52,8 @@ class OrderMain extends StatelessWidget {
                             imageUrl: order['order_img'] ?? "",
                             title: order['pro_name'] ?? "Sản phẩm không tên",
                             price: "${order['total_price'] ?? '0'}đ",
-                            status: order['order_status'] ?? "Chưa rõ",
+                            status:
+                                order['order_status'] ?? "Đang chờ xác nhận",
                             deliveryDate:
                                 order['order_expected_day'] ?? "Chưa có ngày",
                             onCancel: () {}, // Xử lý hủy đơn
