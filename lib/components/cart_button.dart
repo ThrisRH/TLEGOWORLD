@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tlego_world/feature/categories/cart_page.dart';
+import 'package:tlego_world/feature/cart/cart_page.dart';
 
 class CartButton extends StatelessWidget {
   const CartButton({super.key});

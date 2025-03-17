@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tlego_world/components/cart_button.dart';
 
 class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -49,13 +50,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
                   color: Color(0xFFE1001A),
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.shopping_bag_outlined,
-                    color: Colors.black),
-                onPressed: () {
-                  // Điều hướng đến giỏ hàng
-                },
-              ),
+              const CartButton()
             ],
           ),
         ),

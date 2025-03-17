@@ -5,4 +5,9 @@ class AuthHelper {
     User? user = FirebaseAuth.instance.currentUser;
     return user?.email ?? 'none';
   }
+
+  static String getUserId() {
+    User? user = FirebaseAuth.instance.currentUser;
+    return user?.uid ?? 'none';
+  }
 }
