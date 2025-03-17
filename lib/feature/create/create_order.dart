@@ -5,7 +5,6 @@ import 'package:flutter_dash/flutter_dash.dart';
 import 'package:tlego_world/assets/color/colors.dart';
 import 'package:tlego_world/components/app_bar.dart';
 import 'package:tlego_world/components/box_info.dart';
-import 'package:tlego_world/feature/cart/cart_page.dart';
 import 'package:tlego_world/feature/create/components/total_box.dart';
 import 'package:tlego_world/feature/create/final_step_order.dart';
 import 'package:tlego_world/services/auth_helper.dart';
@@ -232,7 +231,7 @@ class _PaymentCheckingState extends State<PaymentChecking> {
                             order_id: id,
                             order_img: imageFirst,
                             order_price: total_order,
-                            order_status: "Đang chờ xác nhận",
+                            order_status: "chờ vận chuyển",
                             pro_name: proNameFirst,
                             total_price: totalAll);
 

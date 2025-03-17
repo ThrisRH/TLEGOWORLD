@@ -10,7 +10,8 @@ class OrderStatusBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Xác định trạng thái đơn hàng
-    bool isWaiting = orderStatus.toLowerCase() == "chờ vận chuyển";
+    bool isWaiting = orderStatus.toLowerCase() == "chờ vận chuyển" ||
+        orderStatus.toLowerCase() == "đang chờ xác nhận";
     bool isShipping = orderStatus.toLowerCase() == "đang vận chuyển";
     bool isDelivered = orderStatus.toLowerCase() == "nhận hàng";
 

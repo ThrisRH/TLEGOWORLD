@@ -87,7 +87,6 @@ class _OrderDetailState extends State<OrderDetail> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               OrderStatusBar(orderId: orderId, orderStatus: orderStatus),
-              Text(id),
               const SizedBox(height: 32),
               CustomerInfo(cusid: cusid),
               const SizedBox(height: 32),
@@ -95,7 +94,8 @@ class _OrderDetailState extends State<OrderDetail> {
               const SizedBox(height: 32),
               TotalOrder(cusid: cusid, orderid: orderId),
               const SizedBox(height: 32),
-              if (orderStatus == "chờ vận chuyển")
+              if (orderStatus == "chờ vận chuyển" ||
+                  orderStatus == "Đang chờ xác nhận")
                 CancelButton(
                   onPressed: isDeleting ? null : () => handleDelete(orderId),
                   isDeleting: isDeleting,

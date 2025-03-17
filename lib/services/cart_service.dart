@@ -59,7 +59,7 @@ class CartService {
     try {
       final response = await http.delete(
         Uri.parse(
-          'http://192.168.139.125:5000/api/carts/$userId',
+          'http://3.25.92.254:5000/api/carts/$userId',
         ),
       );
 
