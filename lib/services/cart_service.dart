@@ -54,4 +54,23 @@ class CartService {
       return false;
     }
   }
+
+  static Future<bool> clearUserCart(String userId) async {
+    try {
+      final response = await http.delete(
+        Uri.parse(
+          'http://192.168.139.125:5000/api/carts/$userId',
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        return true; // Thêm thành công
+      } else {
+        return false; // Lỗi từ server
+      }
+    } catch (e) {
+      print("Lỗi khi xóa cart: $e");
+      return false;
+    }
+  }
 }
