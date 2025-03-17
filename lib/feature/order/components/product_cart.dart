@@ -105,15 +105,15 @@ class OrderItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Text(
-                "Dự kiến giao: $deliveryDate",
-                style: const TextStyle(
-                  color: Color(0xFF808080),
-                  fontSize: 12,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+              // Text(
+              //   "Dự kiến giao: $deliveryDate",
+              //   style: const TextStyle(
+              //     color: Color(0xFF808080),
+              //     fontSize: 12,
+              //   ),
+              //   maxLines: 1,
+              //   overflow: TextOverflow.ellipsis,
+              // ),
             ],
           ),
           const SizedBox(height: 10),

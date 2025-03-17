@@ -75,7 +75,7 @@ class _CategoriesMainState extends State<CategoriesMain> {
                                 crossAxisCount: 3,
                                 crossAxisSpacing: 12,
                                 mainAxisSpacing: 12,
-                                childAspectRatio: 0.8,
+                                childAspectRatio: 0.7,
                               ),
                               itemCount: categoriesList.length,
                               itemBuilder: (context, index) {

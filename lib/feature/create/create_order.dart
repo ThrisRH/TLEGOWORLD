@@ -220,8 +220,7 @@ class _PaymentCheckingState extends State<PaymentChecking> {
 
                         print('img: ${imageFirst}');
 
-                        double totalAll =
-                            total_order + total_shipping - total_voucher;
+                        double totalAll = total_order + total_shipping;
 
                         print(
                             "Ngày ${DateTime.now().toString()}, id: $id, cus: ${AuthHelper.getUserId()}, ");
