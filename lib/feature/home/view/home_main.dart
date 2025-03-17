@@ -40,16 +40,11 @@ class _HomeMainState extends State<HomeMain> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: Scaffold(
+    return SafeArea(
+      child: Scaffold(
         backgroundColor: Colors.white,
         body: Column(
           children: [
-            const SizedBox(
-              height: 35,
-            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(

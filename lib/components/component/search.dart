@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tlego_world/assets/color/colors.dart';
+import 'package:tlego_world/components/component/cart_button.dart';
 
 class SearchBarbtn extends StatelessWidget {
   final VoidCallback onCartTap;
@@ -54,13 +55,7 @@ class SearchBarbtn extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          GestureDetector(
-            onTap: onCartTap,
-            child: const Icon(
-              Icons.shopping_cart_outlined,
-              color: Color(0xFF28282B),
-            ),
-          ),
+          const CartButton(),
         ],
       ),
     );
