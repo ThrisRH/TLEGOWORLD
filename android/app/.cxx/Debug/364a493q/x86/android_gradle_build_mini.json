@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "C:\\Users\\msi\\AppData\\Local\\flutter\\packages\\flutter_tools\\gradle\\src\\main\\groovy\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Users\\msi\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "C:\\Users\\msi\\Documents\\code\\tlego_fe\\TLEGOWORLD\\android\\app\\.cxx\\Debug\\364a493q\\x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Users\\msi\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "C:\\Users\\msi\\Documents\\code\\tlego_fe\\TLEGOWORLD\\android\\app\\.cxx\\Debug\\364a493q\\x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tlego_world/assets/color/colors.dart';
 
 class OrderItem extends StatelessWidget {
   final String imageUrl;
@@ -6,6 +7,8 @@ class OrderItem extends StatelessWidget {
   final String price;
   final String status;
   final String deliveryDate;
+  final bool cancelStatus;
+  final bool isDelivered;
   final VoidCallback onCancel;
   final VoidCallback onDetails;
 
@@ -17,7 +20,7 @@ class OrderItem extends StatelessWidget {
     required this.status,
     required this.deliveryDate,
     required this.onCancel,
-    required this.onDetails,
+    required this.onDetails, required this.cancelStatus, required this.isDelivered,
   });
 
   @override
@@ -97,8 +100,7 @@ class OrderItem extends StatelessWidget {
                 child: Text(
                   status,
                   style: const TextStyle(
-                    color: Color.fromARGB(255, 219, 186, 21),
-                    fontWeight: FontWeight.w700,
+                    color: AppColor.primary,
                     fontSize: 14,
                   ),
                   maxLines: 1,
@@ -122,7 +124,7 @@ class OrderItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              OutlinedButton(
+              cancelStatus ?  OutlinedButton(
                 onPressed: onCancel,
                 style: OutlinedButton.styleFrom(
                   foregroundColor: const Color(0xFFE1001A),
@@ -143,20 +145,28 @@ class OrderItem extends StatelessWidget {
                     fontFamily: 'Roboto',
                   ),
                 ),
-              ),
+              ) : const Text(""),
               const SizedBox(width: 10),
               ElevatedButton(
                 onPressed: onDetails,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFE1001A),
+                  backgroundColor: AppColor.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6),
                   ),
                   padding:
                       const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
                 ),
-                child: const Text(
+                child: !isDelivered ? const Text(
                   "CHI TIẾT",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    fontFamily: 'Roboto',
+                  ),
+                ): const Text(
+                  "Đánh giá",
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,

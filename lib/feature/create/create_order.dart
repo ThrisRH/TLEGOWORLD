@@ -194,26 +194,33 @@ class _PaymentCheckingState extends State<PaymentChecking> {
                     GestureDetector(
                       onTap: () {
                         print(products.length);
+                        
                         String id = getRandomIDItem();
                         String userId = AuthHelper.getUserId();
                         String imageFirst = "";
                         String proNameFirst = "";
                         double total_order = 0;
                         for (int i = 0; i < products.length; i++) {
+                           print(
+                            '${id}, ${products[i]['pro_price'].toString()}, ${products[i]['pro_name']}, ${products[i]['pro_quantity']}, ${products[i]['pro_image']}, ${products[i]['pro_ID']}',
+                          );
                           if (i == 0) {
                             imageFirst = products[i]['pro_img'];
                             proNameFirst = products[i]['pro_name'];
                           }
                           total_order += products[i]['pro_price'] *
                               products[i]['pro_quantity'];
+                              
                           OrderService.createOrderItem(
                               order_id: id,
                               order_price: products[i]['pro_price'].toDouble(),
                               order_quantity: products[i]['pro_quantity'],
-                              order_name: products[i]['pro_name']);
+                              order_name: products[i]['pro_name'],
+                              pro_ID: products[i]['pro_ID'],
+                              pro_img: products[i]['pro_img'],);
 
                           print(
-                            '${id}, ${products[i]['pro_price'].toString()}, ${products[i]['pro_name']}, ${products[i]['pro_quantity']}',
+                            '${id}, ${products[i]['pro_price'].toString()}, ${products[i]['pro_name']}, ${products[i]['pro_quantity']}, ${products[i]['pro_img']}, ${products[i]['pro_ID']}',
                           );
                         }
 
@@ -231,7 +238,7 @@ class _PaymentCheckingState extends State<PaymentChecking> {
                             order_id: id,
                             order_img: imageFirst,
                             order_price: total_order,
-                            order_status: "chờ vận chuyển",
+                            order_status: "Đang chờ xác nhận",
                             pro_name: proNameFirst,
                             total_price: totalAll);
 

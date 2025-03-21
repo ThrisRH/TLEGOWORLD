@@ -4,27 +4,35 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class OrderService {
+  static const String localHost = "192.168.139.147";
+
   static Future<String?> createOrderItem({
     required String order_id,
     required double order_price,
     required int order_quantity,
     required String order_name,
+    required String pro_ID,
+    required String pro_img,
   }) async {
     print('📡 JSON gửi lên server: ${jsonEncode({
           "order_id": order_id,
           "order_price": order_price,
           "order_quantity": order_quantity,
           "order_name": order_name,
+          "pro_img": pro_img,
+          "pro_ID": pro_ID
         })}');
     try {
       final response = await http.post(
-        Uri.parse("http://3.25.92.254:5000/api/orderitem"),
+        Uri.parse("http://$localHost:5000/api/orderitem"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "order_id": order_id,
           "order_price": order_price,
           "order_quantity": order_quantity,
           "pro_name": order_name,
+          "pro_img": pro_img,
+          "pro_ID": pro_ID
         }),
       );
 

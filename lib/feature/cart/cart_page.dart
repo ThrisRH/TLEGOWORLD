@@ -5,6 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tlego_world/assets/color/colors.dart';
 import 'package:tlego_world/components/app_bar.dart';
+import 'package:tlego_world/feature/cart/components/un_login.dart';
+import 'package:tlego_world/feature/categories/cart_page.dart';
 import 'package:tlego_world/feature/create/create_order.dart';
 import 'package:tlego_world/feature/home/app.dart';
 import 'package:tlego_world/feature/login/view/login_main.dart';
@@ -22,13 +24,14 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  String userId = "";
   late Future<List<dynamic>> _cartFuture;
   double totalPrice = 0;
   double totalProduct = 0;
   @override
   void initState() {
     super.initState();
-    String userId = AuthHelper.getUserId();
+    userId = AuthHelper.getUserId();
     print(userId);
     _cartFuture = CartService.getUserCart(userId);
   }
@@ -54,7 +57,7 @@ class _CartPageState extends State<CartPage> {
         ),
       ),
       body: (AuthHelper.getUserId() == "none")
-          ? const UnLogin()
+          ? UnLogin()
           : Column(
               children: [
                 Expanded(
@@ -161,7 +164,19 @@ class _CartPageState extends State<CartPage> {
 
                                               /// Nút xóa
                                               GestureDetector(
-                                                onTap: () {},
+                                               onTap: () async {
+                                                print('Xóa');
+                                                bool isDeleted = await CartService.deleteProductInCart(userId, item['pro_ID']);
+                                                print(item['cartProId']);
+
+                                                if (isDeleted) {
+                                                   setState(() {
+                                                     _cartFuture = CartService.getUserCart(userId);
+                                                   });
+                                                } else {
+                                                  print('Xóa thất bại');
+                                                }
+                                              },
                                                 child: Align(
                                                   alignment: Alignment.topRight,
                                                   child: SvgPicture.asset(
@@ -199,7 +214,7 @@ class _CartPageState extends State<CartPage> {
                                                 children: [
                                                   /// Nút giảm
                                                   GestureDetector(
-                                                    onTap: () {
+                                                    onTap: () async {
                                                       setState(() {
                                                         if (item[
                                                                 'pro_quantity'] >
@@ -207,7 +222,9 @@ class _CartPageState extends State<CartPage> {
                                                           item['pro_quantity'] -=
                                                               1;
                                                         }
+                                                        
                                                       });
+                                                      await CartService.updateProductQuantity(userId, item['cartProId'], item['pro_quantity']);
                                                     },
                                                     child: Container(
                                                       width: 24,
@@ -263,15 +280,18 @@ class _CartPageState extends State<CartPage> {
 
                                                   /// Nút tăng
                                                   GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        if (item[
-                                                                'pro_quantity'] <
-                                                            10) {
-                                                          item['pro_quantity'] +=
-                                                              1;
-                                                        }
-                                                      });
+                                                   onTap: () async {
+                                                      if (item['pro_quantity'] < 10) {
+                                                        int newQuantity = item['pro_quantity'] + 1;
+
+                                                        // Gọi API trước
+                                                        await CartService.updateProductQuantity(userId, item['cartProId'], newQuantity);
+
+                                                        // Sau đó cập nhật UI
+                                                        setState(() {
+                                                          item['pro_quantity'] = newQuantity;
+                                                        });
+                                                      }
                                                     },
                                                     child: Container(
                                                       width: 24,
@@ -319,113 +339,6 @@ class _CartPageState extends State<CartPage> {
                 OrderButton(totalPrice: totalPrice, totalProduct: totalProduct)
               ],
             ),
-    );
-  }
-}
-
-class NoProInCart extends StatelessWidget {
-  const NoProInCart({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height,
-      alignment: Alignment.center,
-      child: Column(
-        children: [
-          Image.asset('lib/assets/images/lego_pics/empty_cart.png'),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Text('Bạn chưa có sản phẩm nào trong giỏ hàng !',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.mateGray)),
-              SizedBox(
-                height: 6,
-              ),
-              Text('Hãy lựa chọn và thêm sản phẩm vào giỏ hàng.',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColor.normalGray,
-                  )),
-            ],
-          ),
-          SizedBox(
-            height: 24,
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => Navbar()));
-            },
-            child: Text('Bắt đầu mua sắm',
-                style: TextStyle(
-                    fontSize: 14,
-                    color: AppColor.primaryBlue,
-                    decoration: TextDecoration.underline,
-                    decorationColor: AppColor.primaryBlue,
-                    decorationThickness: 1,
-                    height: 1)),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class UnLogin extends StatelessWidget {
-  const UnLogin({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height,
-      alignment: Alignment.center,
-      child: Column(
-        children: [
-          Image.asset('lib/assets/images/lego_pics/un_login.png'),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Text('Bạn chưa đăng nhập vào TLegoWorld!',
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.mateGray)),
-              SizedBox(
-                height: 6,
-              ),
-              Text('Hãy đăng nhập vào hệ thống để thêm vào giỏ hàng.',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColor.normalGray,
-                  )),
-            ],
-          ),
-          SizedBox(
-            height: 24,
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()));
-            },
-            child: Text('Đăng nhập ngay',
-                style: TextStyle(
-                    fontSize: 14,
-                    color: AppColor.primaryBlue,
-                    decoration: TextDecoration.underline,
-                    decorationColor: AppColor.primaryBlue,
-                    fontWeight: FontWeight.bold,
-                    decorationThickness: 1,
-                    height: 1)),
-          )
-        ],
-      ),
     );
   }
 }

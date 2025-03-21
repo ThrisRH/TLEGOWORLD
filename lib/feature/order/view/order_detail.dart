@@ -46,28 +46,7 @@ class _OrderDetailState extends State<OrderDetail> {
     setState(() => isDeleting = false);
   }
 
-  void showRatingPopup(String orderId) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return RatingPopup(
-          onSubmit: (int rating, String review) async {
-            await TransactionService.saveTransaction(
-              context: context,
-              id: orderId,
-              rating: rating,
-              review: review,
-            );
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Gửi đánh giá thành công!")),
-              );
-            }
-          },
-        );
-      },
-    );
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -101,11 +80,6 @@ class _OrderDetailState extends State<OrderDetail> {
                   isDeleting: isDeleting,
                   text: 'Hủy đơn',
                 )
-              else if (orderStatus == "nhận hàng")
-                RatingButton(
-                  onPressed: () => showRatingPopup(orderId),
-                  text: 'Đánh giá',
-                ),
             ],
           ),
         ),
