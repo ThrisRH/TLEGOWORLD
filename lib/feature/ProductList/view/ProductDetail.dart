@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tlego_world/components/component/QuantitySelector.dart';
 import 'package:tlego_world/components/component/button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tlego_world/assets/color/colors.dart';
@@ -7,9 +8,11 @@ import 'package:tlego_world/components/component/ListBar.dart';
 import 'package:tlego_world/feature/ProductList/components/add_product_popup.dart';
 import 'package:tlego_world/feature/ProductList/components/pro_description.dart';
 import 'package:intl/intl.dart';
+import 'package:tlego_world/feature/create/unlog_views/unlogin_info.dart';
 import 'package:tlego_world/feature/login/view/login_main.dart';
 import 'package:tlego_world/services/auth_helper.dart';
 import 'package:tlego_world/services/cart_service.dart';
+import 'package:tlego_world/services/rating_service.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final String proID;
@@ -22,6 +25,7 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Map<String, dynamic>? productData;
+  List<Map<String, dynamic>> reviews = [];
   bool isLoading = true;
   String errorMessage = '';
   String userId = "";
@@ -31,6 +35,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     super.initState();
     userId = AuthHelper.getUserId();
     fetchProductData();
+    getReviews(widget.proID);
+  }
+
+  void getReviews(String proID) async {
+    List<Map<String, dynamic>>? fetchedReviews =
+        await RatingService.fetchReviews(proID);
+
+    if (fetchedReviews != null) {
+      setState(() {
+        reviews = fetchedReviews.reversed.take(3).toList();
+      });
+    } else {
+      print("Không tìm thấy đánh giá.");
+    }
   }
 
   Future<void> fetchProductData() async {
@@ -55,7 +73,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
   }
 
-  void _showBuyNowPopup() {
+  void _showCartNowPopup() {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -67,7 +85,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           productName: productData!['pro_name'],
           productImage: productData!['pro_img'],
           productPrice: productData!['pro_price'],
-          onConfirm: () async {
+          onConfirm: (QuantitySelector) async {
             bool success = await CartService.addUserCart(userId, widget.proID);
             String? uid = AuthHelper.getUserId();
 
@@ -87,6 +105,37 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             Navigator.pop(context);
             // Thực hiện hành động mua hàng
           },
+          isCart: true,
+        );
+      },
+    );
+  }
+
+  void _showBuyNowPopup() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (context) {
+        return BuyNowPopup(
+          productName: productData!['pro_name'],
+          productImage: productData!['pro_img'],
+          productPrice: productData!['pro_price'],
+          onConfirm: (quantity) {
+            print("Số lượng được chọn: $quantity"); // ✅ Debug số lượng
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UnloginInfo(
+                  proID: widget.proID,
+                  proQuantity: quantity,
+                ),
+              ),
+            );
+          },
+          isCart: false,
         );
       },
     );
@@ -182,12 +231,49 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                           const SizedBox(width: 8),
                           ShoppingButton(
-                            onPressed: _showBuyNowPopup,
+                            onPressed: _showCartNowPopup,
                           ),
                         ],
                       ),
                       if (productData != null)
                         ProductDescription(productData: productData!),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      const Text(
+                        'Đánh giá khách hàng',
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Color(0xFF1C1C1C),
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      reviews.isEmpty
+                          ? const Center(child: Text("Chưa có đánh giá nào"))
+                          : Column(
+                              children: reviews.map((review) {
+                                return Card(
+                                  color: Colors.white, // Nền trắng
+                                  elevation: 0, // Không shadow
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(8), // Bo góc nhẹ
+                                    side: BorderSide(
+                                        color: Colors.grey.shade300,
+                                        width: 1), // Viền 1px màu xám nhạt
+                                  ),
+                                  child: ListTile(
+                                    leading: const Icon(Icons.verified_user,
+                                        color: AppColor.trueColor),
+                                    title: Text("⭐ ${review['order_rating']}"),
+                                    subtitle: Text(review['order_review']),
+                                  ),
+                                );
+                              }).toList(),
+                            )
                     ],
                   ),
                 ),

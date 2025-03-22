@@ -9,6 +9,7 @@ class OrderItem extends StatelessWidget {
   final String deliveryDate;
   final bool cancelStatus;
   final bool isDelivered;
+  final bool isRated;
   final VoidCallback onCancel;
   final VoidCallback onDetails;
 
@@ -20,7 +21,10 @@ class OrderItem extends StatelessWidget {
     required this.status,
     required this.deliveryDate,
     required this.onCancel,
-    required this.onDetails, required this.cancelStatus, required this.isDelivered,
+    required this.onDetails,
+    required this.cancelStatus,
+    required this.isDelivered,
+    required this.isRated,
   });
 
   @override
@@ -124,28 +128,30 @@ class OrderItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              cancelStatus ?  OutlinedButton(
-                onPressed: onCancel,
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: const Color(0xFFE1001A),
-                  side: const BorderSide(color: Color(0xFFE1001A)),
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 6, horizontal: 8), // Chỉnh padding
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(6), // Chỉnh border radius
-                  ),
-                ),
-                child: const Text(
-                  "HỦY ĐƠN",
-                  style: TextStyle(
-                    fontSize: 12, // Điều chỉnh lại nếu cần
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFE1001A),
-                    fontFamily: 'Roboto',
-                  ),
-                ),
-              ) : const Text(""),
+              cancelStatus
+                  ? OutlinedButton(
+                      onPressed: onCancel,
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: const Color(0xFFE1001A),
+                        side: const BorderSide(color: Color(0xFFE1001A)),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 6, horizontal: 8), // Chỉnh padding
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(6), // Chỉnh border radius
+                        ),
+                      ),
+                      child: const Text(
+                        "HỦY ĐƠN",
+                        style: TextStyle(
+                          fontSize: 12, // Điều chỉnh lại nếu cần
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFE1001A),
+                          fontFamily: 'Roboto',
+                        ),
+                      ),
+                    )
+                  : const Text(""),
               const SizedBox(width: 10),
               ElevatedButton(
                 onPressed: onDetails,
@@ -157,23 +163,35 @@ class OrderItem extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
                 ),
-                child: !isDelivered ? const Text(
-                  "CHI TIẾT",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    fontFamily: 'Roboto',
-                  ),
-                ): const Text(
-                  "Đánh giá",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    fontFamily: 'Roboto',
-                  ),
-                ),
+                child: !isDelivered
+                    ? const Text(
+                        "CHI TIẾT",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          fontFamily: 'Roboto',
+                        ),
+                      )
+                    : !isRated
+                        ? const Text(
+                            "Đánh giá",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              fontFamily: 'Roboto',
+                            ),
+                          )
+                        : const Text(
+                            "Đã đánh giá",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              fontFamily: 'Roboto',
+                            ),
+                          ),
               ),
             ],
           ),

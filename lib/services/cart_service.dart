@@ -5,10 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 class CartService {
+  static String localHost = "192.168.1.73";
   static Future<List<dynamic>> getUserCart(String userId) async {
     try {
-      final response = await http
-          .get(Uri.parse("http://192.168.139.147:5000/api/carts/$userId"));
+      final response =
+          await http.get(Uri.parse("http://$localHost:5000/api/carts/$userId"));
       print(response.statusCode);
 
       if (response.statusCode == 200) {
@@ -35,7 +36,7 @@ class CartService {
   static Future<bool> addUserCart(String userId, String pro_ID) async {
     try {
       final response = await http.post(
-        Uri.parse("http://3.25.92.254:5000/api/carts/addCart"),
+        Uri.parse("http://$localHost:5000/api/carts/addCart"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "userId": userId,
@@ -76,27 +77,28 @@ class CartService {
   }
 
   static Future<bool> deleteProductInCart(String userId, String proId) async {
-    try{
+    try {
       final response = await http.delete(
         Uri.parse(
-          'http://192.168.139.147:5000/api/carts/$userId/$proId',
+          'http://$localHost:5000/api/carts/$userId/$proId',
         ),
       );
 
-       if (response.statusCode == 200) {
+      if (response.statusCode == 200) {
         return true; // Xóa thành công
       } else {
         return false; // Lỗi từ server
       }
-    }
-    catch (e){
+    } catch (e) {
       print("Lỗi khi xóa cart: $e");
       return false;
     }
   }
 
- static Future<bool> updateProductQuantity(String userId, String cartProId, int quantity) async {
-    final url = Uri.parse('http://192.168.139.147:5000/api/carts/update/$userId/$cartProId'); // Thay API URL
+  static Future<bool> updateProductQuantity(
+      String userId, String cartProId, int quantity) async {
+    final url = Uri.parse(
+        'http://$localHost:5000/api/carts/update/$userId/$cartProId'); // Thay API URL
     print(quantity);
     try {
       final response = await http.put(

@@ -5,11 +5,11 @@ import 'package:http/http.dart' as http;
 class TransactionService {
   static Future<void> saveTransaction({
     required BuildContext context,
-    required String id,
     required int rating,
     required String review,
+    required String proID,
   }) async {
-    if (id.isEmpty || rating <= 0 || review.isEmpty) {
+    if (proID.isEmpty || rating <= 0 || review.isEmpty) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please enter all information!')),
@@ -19,10 +19,10 @@ class TransactionService {
     }
 
     try {
-      final url = Uri.parse('http://3.25.92.254:5000/api/rating');
+      final url = Uri.parse('http://192.168.1.73:5000/api/rating');
 
       final transactionData = {
-        'order_id': id,
+        'pro_ID': proID,
         'order_rating': rating,
         'order_review': review,
       };
