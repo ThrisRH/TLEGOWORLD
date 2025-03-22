@@ -7,6 +7,7 @@ import 'package:tlego_world/components/app_bar.dart';
 import 'package:tlego_world/components/box_info.dart';
 import 'package:tlego_world/feature/create/components/total_box.dart';
 import 'package:tlego_world/feature/create/final_step_order.dart';
+import 'package:tlego_world/feature/payment/view/payment_main.dart';
 import 'package:tlego_world/services/auth_helper.dart';
 import 'package:tlego_world/services/auth_service.dart';
 import 'package:tlego_world/services/cart_service.dart';
@@ -240,7 +241,11 @@ class _PaymentCheckingState extends State<PaymentChecking> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const FinalStep()));
+                                builder: (context) => VnPayQR(
+                                      vnpayUrl:
+                                          'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Version=2.1.0&vnp_Command=pay&vnp_TmnCode=2QXUI4J4&vnp_Amount=5000000&vnp_CurrCode=VND&vnp_TxnRef=123456&vnp_OrderInfo=Test%20Thanh%20Toan&vnp_OrderType=other&vnp_Locale=vn&vnp_ReturnUrl=https%3A%2F%2Fyour-backend.com%2Fvnpay_return&vnp_IpAddr=127.0.0.1&vnp_CreateDate=20240320153000&vnp_SecureHash=6a8f3b3a9f89e01c13bd9f8d1dd5d84c',
+                                      amount: 5000000,
+                                    )));
                       },
                       child: Container(
                         width: double.infinity,
