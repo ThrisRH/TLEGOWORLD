@@ -25,14 +25,26 @@ class _CategoriesMainState extends State<CategoriesMain> {
     loadCategories();
   }
 
+  /// Tải dữ liệu danh mục từ API
   Future<void> loadCategories() async {
-    final data = await FetchCategories.fetchData();
-    setState(() {
-      categoriesList = data;
-      isLoading = false;
-    });
+    try {
+      final data = await FetchCategories.fetchData();
+
+      if (!mounted) return; // Kiểm tra widget có còn tồn tại trước khi setState
+
+      setState(() {
+        categoriesList = List<Map<String, dynamic>>.from(data);
+        isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
+  /// Điều hướng đến danh mục sản phẩm
   void navigateToCategoryDetail(BuildContext context, String categoryTitle,
       String cate, int categoryCount) {
     Navigator.push(
@@ -80,19 +92,27 @@ class _CategoriesMainState extends State<CategoriesMain> {
                               itemCount: categoriesList.length,
                               itemBuilder: (context, index) {
                                 final category = categoriesList[index];
+
+                                // Chuyển đổi 'count' thành int, xử lý trường hợp null
+                                int categoryCount = 0;
+                                if (category['count'] is int) {
+                                  categoryCount = category['count'];
+                                } else if (category['count'] != null) {
+                                  categoryCount = int.tryParse(
+                                          category['count'].toString()) ??
+                                      0;
+                                }
+
                                 return CategoryCard(
                                   imageUrl: category['image'],
                                   title: category['title'],
-                                  itemCount: category['count'],
+                                  itemCount: categoryCount,
                                   onTap: () {
                                     navigateToCategoryDetail(
                                       context,
-                                      category['title'],
-                                      category['cate'],
-                                      category['count'] is int
-                                          ? category['count']
-                                          : int.parse(
-                                              category['count'].toString()),
+                                      category['title'] ?? 'Không có tiêu đề',
+                                      category['cate'] ?? '',
+                                      categoryCount,
                                     );
                                   },
                                 );

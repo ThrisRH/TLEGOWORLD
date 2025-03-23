@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tlego_world/components/component/button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tlego_world/assets/color/colors.dart';
-import 'package:tlego_world/components/data_api/product_detail_data.dart';
+import 'package:tlego_world/components/data_api/product/product_detail_data.dart';
 import 'package:tlego_world/components/component/ListBar.dart';
 import 'package:tlego_world/feature/ProductList/components/add_product_popup.dart';
 import 'package:tlego_world/feature/ProductList/components/pro_description.dart';

@@ -24,7 +24,7 @@ class OrderService {
         })}');
     try {
       final response = await http.post(
-        Uri.parse("http://$localHost:5000/api/orderitem"),
+        Uri.parse("http://3.25.92.254:5000/api/orderitem"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "order_id": order_id,
