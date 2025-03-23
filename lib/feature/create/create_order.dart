@@ -1,18 +1,17 @@
-// ignore_for_file: deprecated_member_use, non_constant_identifier_names
+// ignore_for_file: deprecated_member_use, non_constant_identifier_names, avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dash/flutter_dash.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tlego_world/assets/color/colors.dart';
 import 'package:tlego_world/components/app_bar.dart';
-import 'package:tlego_world/components/box_info.dart';
+import 'package:tlego_world/feature/create/components/payment_method_box.dart';
+import 'package:tlego_world/feature/create/components/products_box.dart';
 import 'package:tlego_world/feature/create/components/total_box.dart';
+import 'package:tlego_world/feature/create/components/user_info_box.dart';
 import 'package:tlego_world/feature/create/final_step_order.dart';
 import 'package:tlego_world/services/auth_helper.dart';
-import 'package:tlego_world/services/auth_service.dart';
 import 'package:tlego_world/services/cart_service.dart';
 import 'package:tlego_world/services/order_service.dart';
-import 'package:tlego_world/utils/format_currency.dart';
-import 'package:tlego_world/utils/format_phone_number.dart';
 import 'package:tlego_world/utils/random_price.dart';
 
 class PaymentChecking extends StatefulWidget {
@@ -29,6 +28,7 @@ class _PaymentCheckingState extends State<PaymentChecking> {
   // Random ship + voucher
   int total_shipping = getRandomAmount();
   int total_voucher = getRandomVoucher();
+  String selectedPayment = "Thanh toán khi nhận hàng";
 
   @override
   void initState() {
@@ -99,91 +99,24 @@ class _PaymentCheckingState extends State<PaymentChecking> {
 
                 return Column(
                   children: [
+                    // ==>> Khối thông tin
                     const UserInfoBox(),
                     const SizedBox(height: 16),
-                    BoxInfo(
-                      title: 'Chi tiết đơn hàng',
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColor.lightGray),
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(4),
-                            bottomRight: Radius.circular(4),
-                          ),
-                        ),
-                        child: ListView.separated(
-                          separatorBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 24),
-                            child: Center(
-                              child: Dash(
-                                length: MediaQuery.of(context).size.width - 98,
-                                dashColor: AppColor.lightGray,
-                              ),
-                            ),
-                          ),
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: products.length,
-                          itemBuilder: (context, index) {
-                            final item = products[index];
-
-                            return Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Image.network(
-                                        item['pro_img'],
-                                        width: 80,
-                                        height: 80,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            item['pro_name'],
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              color: AppColor.mateGray,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 6),
-                                          Text(
-                                            'Số lượng: ${item['pro_quantity'].toString()}',
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              color: AppColor.normalGray,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 6),
-                                          Text(
-                                            formatCurrency(item['pro_price']),
-                                            style: const TextStyle(
-                                              fontSize: 20,
-                                              color: AppColor.primary,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
+                    // ==>> Khối sản phẩm đã chọn
+                    ProductsBox(
+                      products: products,
                     ),
                     const SizedBox(height: 16),
+                    // ==>> Khối phương thức thanh toán
+                    PaymentMethodSelection(
+                      onPaymentMethodSelected: (String payment) {
+                        setState(() {
+                          selectedPayment = payment;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    // ==>> Khối tổng tiền
                     TotalBox(
                       total_priceAllOfProducts: totalPrice,
                       total_shipping: total_shipping,
@@ -191,18 +124,20 @@ class _PaymentCheckingState extends State<PaymentChecking> {
                       products_count: totalProduct,
                     ),
                     const SizedBox(height: 16),
+
+                    // ==>> Khối xử lý đặt hàng
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         print(products.length);
-                        
+
                         String id = getRandomIDItem();
                         String userId = AuthHelper.getUserId();
                         String imageFirst = "";
                         String proNameFirst = "";
                         double total_order = 0;
                         for (int i = 0; i < products.length; i++) {
-                           print(
-                            '${id}, ${products[i]['pro_price'].toString()}, ${products[i]['pro_name']}, ${products[i]['pro_quantity']}, ${products[i]['pro_image']}, ${products[i]['pro_ID']}',
+                          print(
+                            '$id, ${products[i]['pro_price'].toString()}, ${products[i]['pro_name']}, ${products[i]['pro_quantity']}, ${products[i]['pro_image']}, ${products[i]['pro_ID']}',
                           );
                           if (i == 0) {
                             imageFirst = products[i]['pro_img'];
@@ -210,44 +145,49 @@ class _PaymentCheckingState extends State<PaymentChecking> {
                           }
                           total_order += products[i]['pro_price'] *
                               products[i]['pro_quantity'];
-                              
-                          OrderService.createOrderItem(
-                              order_id: id,
-                              order_price: products[i]['pro_price'].toDouble(),
-                              order_quantity: products[i]['pro_quantity'],
-                              order_name: products[i]['pro_name'],
-                              pro_ID: products[i]['pro_ID'],
-                              pro_img: products[i]['pro_img'],);
 
-                          print(
-                            '${id}, ${products[i]['pro_price'].toString()}, ${products[i]['pro_name']}, ${products[i]['pro_quantity']}, ${products[i]['pro_img']}, ${products[i]['pro_ID']}',
+                          OrderService.createOrderItem(
+                            order_id: id,
+                            order_price: products[i]['pro_price'].toDouble(),
+                            order_quantity: products[i]['pro_quantity'],
+                            order_name: products[i]['pro_name'],
+                            pro_ID: products[i]['pro_ID'],
+                            pro_img: products[i]['pro_img'],
                           );
                         }
 
-                        print('img: ${imageFirst}');
+                        double totalAll =
+                            total_order + total_shipping - total_voucher;
 
-                        double totalAll = total_order + total_shipping;
+                        if (await OrderService.createOrderDetails(
+                                cus_id: AuthHelper.getUserId(),
+                                deliveryFee: total_shipping.toDouble(),
+                                order_date:
+                                    "${DateTime.now().toUtc().toIso8601String().split('.').first}Z",
+                                order_expected_day:
+                                    "${DateTime.now().toUtc().toIso8601String().split('.').first}Z",
+                                order_id: id,
+                                order_img: imageFirst,
+                                order_price: total_order,
+                                order_status: "Đang chờ xác nhận",
+                                pro_name: proNameFirst,
+                                total_price: totalAll,
+                                payment_method: selectedPayment,
+                                payment_status: 'Chờ thanh toán') !=
+                            null) {
+                          Navigator.push(
+                              // ignore: use_build_context_synchronously
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const FinalStep()));
 
-                        print(
-                            "Ngày ${DateTime.now().toString()}, id: $id, cus: ${AuthHelper.getUserId()}, ");
-                        OrderService.createOrderDetails(
-                            cus_id: AuthHelper.getUserId(),
-                            deliveryFee: total_shipping.toDouble(),
-                            order_date: DateTime.now().day.toString(),
-                            order_expected_day: (DateTime.now()).toString(),
-                            order_id: id,
-                            order_img: imageFirst,
-                            order_price: total_order,
-                            order_status: "Đang chờ xác nhận",
-                            pro_name: proNameFirst,
-                            total_price: totalAll);
-
-                        CartService.clearUserCart(userId);
-
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const FinalStep()));
+                          CartService.clearUserCart(userId);
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: 'Đặt hàng không thành công!',
+                              backgroundColor: AppColor.falseColor,
+                              gravity: ToastGravity.TOP);
+                        }
                       },
                       child: Container(
                         width: double.infinity,
@@ -275,182 +215,6 @@ class _PaymentCheckingState extends State<PaymentChecking> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class UserInfoBox extends StatefulWidget {
-  const UserInfoBox({super.key});
-
-  @override
-  State<UserInfoBox> createState() => _UserInfoBoxState();
-}
-
-class _UserInfoBoxState extends State<UserInfoBox> {
-  late Future<dynamic> _userFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    String userId = AuthHelper.getUserId();
-    print('User ID: $userId');
-    _userFuture = AuthService.getUserInfo(userId);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BoxInfo(
-      title: 'Thông tin người mua',
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-            border: Border.all(color: AppColor.lightGray),
-            borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(4),
-                bottomRight: Radius.circular(4))),
-        child: FutureBuilder<dynamic>(
-            future: _userFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                    child: CircularProgressIndicator()); // Đang tải dữ liệu
-              } else if (snapshot.hasError) {
-                return Center(
-                    child: Text("Lỗi: ${snapshot.error}")); // Báo lỗi nếu có
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(
-                    child: Text("Không có dữ liệu")); // Không có dữ liệu hợp lệ
-              }
-
-              @override
-              final userInfo = snapshot.data!;
-              print('${userInfo}');
-
-              return (userInfo['cus_address'] == "" ||
-                      userInfo['cus_name'] == "" ||
-                      userInfo['cus_phone'] == "" ||
-                      userInfo['cus_email'] == "" ||
-                      userInfo['cus_id'] == "")
-                  ? const NoInfo()
-                  : HaveInfo(
-                      cus_name: userInfo['cus_name'],
-                      cus_phone: userInfo['cus_phone'],
-                      cus_address: userInfo['cus_address'],
-                    );
-            }),
-      ),
-    );
-  }
-}
-
-class HaveInfo extends StatefulWidget {
-  final String cus_name;
-  final String cus_phone;
-  final String cus_address;
-  const HaveInfo(
-      {super.key,
-      required this.cus_name,
-      required this.cus_phone,
-      required this.cus_address});
-
-  @override
-  State<HaveInfo> createState() => _HaveInfoState();
-}
-
-class _HaveInfoState extends State<HaveInfo> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Name
-        Text(
-          widget.cus_name,
-          style: const TextStyle(
-              color: AppColor.mateGray,
-              fontSize: 20,
-              fontWeight: FontWeight.bold),
-          textAlign: TextAlign.left,
-        ),
-        // PhoneNumber
-        const SizedBox(
-          height: 6,
-        ),
-        Text(
-          formatPhoneNumber(widget.cus_phone),
-          style: const TextStyle(
-            color: AppColor.normalGray,
-            fontSize: 14,
-          ),
-          textAlign: TextAlign.left,
-        ),
-        // Address
-        const SizedBox(
-          height: 6,
-        ),
-        Text(
-          widget.cus_address,
-          style: const TextStyle(
-            color: AppColor.normalGray,
-            fontSize: 14,
-          ),
-          textAlign: TextAlign.left,
-        ),
-        const Align(
-          alignment: Alignment.bottomRight,
-          child: Text(
-            'Cập nhật thông tin',
-            style: TextStyle(
-                color: AppColor.primaryBlue,
-                decoration: TextDecoration.underline,
-                decorationColor: AppColor.primaryBlue),
-            textAlign: TextAlign.right,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class NoInfo extends StatelessWidget {
-  const NoInfo({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(
-          child: Image.asset(
-            'lib/assets/images/lego_pics/no_info.png',
-            width: 138,
-            height: 138,
-          ),
-        ),
-        const SizedBox(
-          height: 24,
-        ),
-        const Text(
-          'Bạn chưa có thông tin nhận hàng!',
-          style: TextStyle(color: AppColor.mateGray),
-          textAlign: TextAlign.left,
-        ),
-        const SizedBox(
-          height: 6,
-        ),
-        const Align(
-          alignment: Alignment.bottomRight,
-          child: Text(
-            'Cập nhật ngay',
-            style: TextStyle(
-                color: AppColor.primaryBlue,
-                decoration: TextDecoration.underline,
-                decorationColor: AppColor.primaryBlue),
-            textAlign: TextAlign.right,
-          ),
-        ),
-      ],
     );
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:tlego_world/components/component/QuantitySelector.dart';
 import 'package:tlego_world/components/component/button.dart';
@@ -8,9 +10,11 @@ import 'package:tlego_world/components/component/ListBar.dart';
 import 'package:tlego_world/feature/ProductList/components/add_product_popup.dart';
 import 'package:tlego_world/feature/ProductList/components/pro_description.dart';
 import 'package:intl/intl.dart';
+import 'package:tlego_world/feature/create/checkout_buynow.dart';
 import 'package:tlego_world/feature/create/unlog_views/unlogin_info.dart';
 import 'package:tlego_world/feature/login/view/login_main.dart';
 import 'package:tlego_world/services/auth_helper.dart';
+import 'package:tlego_world/services/auth_service.dart';
 import 'package:tlego_world/services/cart_service.dart';
 import 'package:tlego_world/services/rating_service.dart';
 
@@ -123,17 +127,43 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           productName: productData!['pro_name'],
           productImage: productData!['pro_img'],
           productPrice: productData!['pro_price'],
-          onConfirm: (quantity) {
-            print("Số lượng được chọn: $quantity"); // ✅ Debug số lượng
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => UnloginInfo(
-                  proID: widget.proID,
-                  proQuantity: quantity,
+          onConfirm: (quantity) async {
+            // print("Số lượng được chọn: $quantity");
+            print('check: ${userId.isEmpty}');
+            if (userId == null || userId == "") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UnloginInfo(
+                    proID: widget.proID,
+                    proQuantity: quantity,
+                  ),
                 ),
-              ),
-            );
+              );
+            } else {
+              final userData = await AuthService.getUserInfo(userId);
+              if (userData == null) {
+                return;
+              } else {
+                Navigator.push(
+                  // ignore: use_build_context_synchronously
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CheckoutBuyNow(
+                      proID: widget.proID,
+                      proQuantity: quantity,
+                      guestPhone:
+                          userData["cus_phone"] ?? "", // Sửa lỗi tại đây
+                      guestName: userData["cus_name"] ?? "",
+                      guestAddress: userData["cus_address"] ?? "",
+                      province: userData["cus_province"] ?? "",
+                      district: userData["cus_district"] ?? "",
+                      ward: userData["cus_ward"] ?? "",
+                    ),
+                  ),
+                );
+              }
+            }
           },
           isCart: false,
         );

@@ -1,12 +1,14 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tlego_world/assets/color/colors.dart';
 import 'package:tlego_world/components/app_bar.dart';
 import 'package:tlego_world/components/box_info.dart';
 import 'package:tlego_world/components/component/button.dart';
 import 'package:tlego_world/components/product_element.dart';
+import 'package:tlego_world/feature/create/checkout_buynow.dart';
 import 'package:tlego_world/feature/create/components/dropdown_field.dart';
 import 'package:tlego_world/services/product_service.dart';
 
@@ -68,20 +70,6 @@ class _UnloginInfoState extends State<UnloginInfo> {
               if (product == null) {
                 return const Center(child: Text("Không tìm thấy sản phẩm"));
               }
-
-              // /// Tính tổng tiền và tổng số lượng sản phẩm
-              // double newTotalPrice = products.fold(0, (sum, item) {
-              //   final price =
-              //       double.tryParse(item["pro_price"].toString()) ?? 0;
-              //   final quantity = widget.proQuantity;
-              //   return sum + (price * quantity);
-              // });
-
-              // int newTotalProduct = products.fold(0, (sum, item) {
-              //   final quantity =
-              //       int.tryParse(item["pro_quantity"].toString()) ?? 0;
-              //   return sum + quantity;
-              // });
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,7 +158,10 @@ class _UnloginInfoState extends State<UnloginInfo> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const InfoForm(),
+                  InfoForm(
+                    proID: widget.proID,
+                    proQuantity: widget.proQuantity,
+                  ),
                 ],
               );
             },
@@ -182,7 +173,9 @@ class _UnloginInfoState extends State<UnloginInfo> {
 }
 
 class InfoForm extends StatefulWidget {
-  const InfoForm({super.key});
+  final String proID;
+  final int proQuantity;
+  const InfoForm({super.key, required this.proID, required this.proQuantity});
 
   @override
   State<InfoForm> createState() => _InfoFormState();
@@ -202,6 +195,32 @@ class _InfoFormState extends State<InfoForm> {
     String name = _nameController.text.trim();
     String address = _addressController.text.trim();
 
+    if (address.isEmpty ||
+        phone.isEmpty ||
+        name.isEmpty ||
+        _selectedProvices.isEmpty ||
+        _selectedDistrict.isEmpty ||
+        _selectedWard.isEmpty) {
+      Fluttertoast.showToast(
+          msg: 'Không được bỏ trông bất kỳ thông tin nào!',
+          backgroundColor: AppColor.falseColor,
+          gravity: ToastGravity.TOP);
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CheckoutBuyNow(
+              proID: widget.proID,
+              proQuantity: widget.proQuantity,
+              guestPhone: phone,
+              guestName: name,
+              guestAddress: address,
+              province: _selectedProvices,
+              district: _selectedDistrict,
+              ward: _selectedWard),
+        ),
+      );
+    }
     print("Số điện thoại: $phone");
     print("Họ và tên: $name");
     print(
@@ -317,7 +336,7 @@ class _InfoFormState extends State<InfoForm> {
             floatingLabelBehavior: FloatingLabelBehavior.always,
             hintStyle:
                 const TextStyle(fontSize: 14, color: AppColor.normalGray),
-            hintText: 'Số 123/2/3, đường Nguyễn Thị Minh Khai',
+            hintText: 'VD: Số 123/2/3, đường Nguyễn Thị Minh Khai',
             floatingLabelAlignment: FloatingLabelAlignment.start,
           ),
         ),

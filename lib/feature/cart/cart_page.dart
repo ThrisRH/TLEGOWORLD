@@ -164,19 +164,24 @@ class _CartPageState extends State<CartPage> {
 
                                               /// Nút xóa
                                               GestureDetector(
-                                               onTap: () async {
-                                                print('Xóa');
-                                                bool isDeleted = await CartService.deleteProductInCart(userId, item['pro_ID']);
-                                                print(item['cartProId']);
+                                                onTap: () async {
+                                                  print('Xóa');
+                                                  bool isDeleted =
+                                                      await CartService
+                                                          .deleteProductInCart(
+                                                              userId,
+                                                              item['pro_ID']);
+                                                  print(item['cartProId']);
 
-                                                if (isDeleted) {
-                                                   setState(() {
-                                                     _cartFuture = CartService.getUserCart(userId);
-                                                   });
-                                                } else {
-                                                  print('Xóa thất bại');
-                                                }
-                                              },
+                                                  if (isDeleted) {
+                                                    setState(() {
+                                                      _cartFuture = CartService
+                                                          .getUserCart(userId);
+                                                    });
+                                                  } else {
+                                                    print('Xóa thất bại');
+                                                  }
+                                                },
                                                 child: Align(
                                                   alignment: Alignment.topRight,
                                                   child: SvgPicture.asset(
@@ -222,9 +227,13 @@ class _CartPageState extends State<CartPage> {
                                                           item['pro_quantity'] -=
                                                               1;
                                                         }
-                                                        
                                                       });
-                                                      await CartService.updateProductQuantity(userId, item['cartProId'], item['pro_quantity']);
+                                                      await CartService
+                                                          .updateProductQuantity(
+                                                              userId,
+                                                              item['cartProId'],
+                                                              item[
+                                                                  'pro_quantity']);
                                                     },
                                                     child: Container(
                                                       width: 24,
@@ -280,16 +289,25 @@ class _CartPageState extends State<CartPage> {
 
                                                   /// Nút tăng
                                                   GestureDetector(
-                                                   onTap: () async {
-                                                      if (item['pro_quantity'] < 10) {
-                                                        int newQuantity = item['pro_quantity'] + 1;
+                                                    onTap: () async {
+                                                      if (item['pro_quantity'] <
+                                                          10) {
+                                                        int newQuantity = item[
+                                                                'pro_quantity'] +
+                                                            1;
 
                                                         // Gọi API trước
-                                                        await CartService.updateProductQuantity(userId, item['cartProId'], newQuantity);
+                                                        await CartService
+                                                            .updateProductQuantity(
+                                                                userId,
+                                                                item[
+                                                                    'cartProId'],
+                                                                newQuantity);
 
                                                         // Sau đó cập nhật UI
                                                         setState(() {
-                                                          item['pro_quantity'] = newQuantity;
+                                                          item['pro_quantity'] =
+                                                              newQuantity;
                                                         });
                                                       }
                                                     },
@@ -361,90 +379,97 @@ class OrderButtonState extends State<OrderButton> {
       width: double.infinity,
       padding: EdgeInsets.only(top: 0, bottom: 12, left: 24, right: 24),
       decoration: BoxDecoration(),
-      child: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            height: 56,
-            decoration: BoxDecoration(
-              border: Border(
-                left: BorderSide(
-                    color: AppColor.primary, width: 1), // Border cạnh trái
-                right: BorderSide(
-                    color: AppColor.primary, width: 1), // Border cạnh phải
-                top: BorderSide(color: AppColor.primary, width: 1),
-              ),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
-              ),
-            ),
-            child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12),
-                alignment: Alignment.center,
-                child: Row(
-                  children: [
-                    Text(
-                      'Tổng giá trị (${widget.totalProduct.toInt()}):',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: AppColor.mateGray,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Spacer(),
-                    Text(
-                      '${formatCurrency(widget.totalPrice.toInt())}',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: AppColor.primary,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                )),
-          ),
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  left: BorderSide(
-                      color: AppColor.primary, width: 1), // Border cạnh trái
-                  right: BorderSide(
-                      color: AppColor.primary, width: 1), // Border cạnh phải
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(24),
-                  bottomRight: Radius.circular(24),
-                ),
-              ),
-              child: Container(
-                  alignment: Alignment.center,
+      child: widget.totalProduct.toInt() != 0
+          ? Column(
+              children: [
+                Container(
+                  width: double.infinity,
                   height: 56,
                   decoration: BoxDecoration(
-                      color: AppColor.primary,
-                      borderRadius: BorderRadius.circular(24)),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PaymentChecking()));
-                    },
-                    child: Text(
-                      'ĐẶT HÀNG NGAY',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                    border: Border(
+                      left: BorderSide(
+                          color: AppColor.primary,
+                          width: 1), // Border cạnh trái
+                      right: BorderSide(
+                          color: AppColor.primary,
+                          width: 1), // Border cạnh phải
+                      top: BorderSide(color: AppColor.primary, width: 1),
                     ),
-                  )),
-            ),
-          ),
-        ],
-      ),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
+                    ),
+                  ),
+                  child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      alignment: Alignment.center,
+                      child: Row(
+                        children: [
+                          Text(
+                            'Tổng giá trị (${widget.totalProduct.toInt()}):',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppColor.mateGray,
+                              fontSize: 16,
+                            ),
+                          ),
+                          Spacer(),
+                          Text(
+                            '${formatCurrency(widget.totalPrice.toInt())}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppColor.primary,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      )),
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        left: BorderSide(
+                            color: AppColor.primary,
+                            width: 1), // Border cạnh trái
+                        right: BorderSide(
+                            color: AppColor.primary,
+                            width: 1), // Border cạnh phải
+                      ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(24),
+                        bottomRight: Radius.circular(24),
+                      ),
+                    ),
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 56,
+                      decoration: BoxDecoration(
+                          color: AppColor.primary,
+                          borderRadius: BorderRadius.circular(24)),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PaymentChecking()));
+                        },
+                        child: Text(
+                          'ĐẶT HÀNG NGAY',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : Text(''),
     );
   }
 }
