@@ -116,8 +116,11 @@ class _CheckoutButtonState extends State<CheckoutButton> {
                     payment_status: 'Chờ thanh toán') !=
                 null) {
               // ignore: use_build_context_synchronously
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const FinalStep()));
+              Navigator.pushAndRemoveUntil(
+                  // ignore: use_build_context_synchronously
+                  context,
+                  MaterialPageRoute(builder: (context) => const FinalStep()),
+                  (Route<dynamic> route) => false);
             }
           } else {
             Fluttertoast.showToast(

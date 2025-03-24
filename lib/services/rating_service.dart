@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class RatingService {
-  static String localHost = "192.168.1.73";
+  static String localHost = "3.25.92.254";
 
   // Hàm lấy danh sách đánh giá theo pro_ID
   static Future<List<Map<String, dynamic>>?> fetchReviews(String proID) async {

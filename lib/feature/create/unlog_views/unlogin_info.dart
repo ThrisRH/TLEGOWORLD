@@ -210,6 +210,7 @@ class _InfoFormState extends State<InfoForm> {
         context,
         MaterialPageRoute(
           builder: (context) => CheckoutBuyNow(
+              isAccount: false,
               proID: widget.proID,
               proQuantity: widget.proQuantity,
               guestPhone: phone,

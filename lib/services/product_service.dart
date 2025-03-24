@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 class ProductService {
-  static String localHost = "192.168.1.73";
+  static String localHost = "3.25.92.254";
   static Future<Map<String, dynamic>?> getProByID(String proId) async {
     try {
       final response = await http

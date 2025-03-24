@@ -19,7 +19,7 @@ class TransactionService {
     }
 
     try {
-      final url = Uri.parse('http://192.168.1.73:5000/api/rating');
+      final url = Uri.parse('http://3.25.92.254:5000/api/rating');
 
       final transactionData = {
         'pro_ID': proID,

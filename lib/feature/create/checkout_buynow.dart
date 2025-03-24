@@ -25,6 +25,7 @@ class CheckoutBuyNow extends StatefulWidget {
   final String district;
   final String ward;
   final int proQuantity;
+  final bool isAccount;
   const CheckoutBuyNow(
       {super.key,
       required this.proID,
@@ -34,7 +35,8 @@ class CheckoutBuyNow extends StatefulWidget {
       required this.guestAddress,
       required this.province,
       required this.district,
-      required this.ward});
+      required this.ward,
+      required this.isAccount});
 
   @override
   State<CheckoutBuyNow> createState() => _CheckoutBuyNowState();
@@ -104,15 +106,15 @@ class _CheckoutBuyNowState extends State<CheckoutBuyNow> {
                     total_voucher;
                 print(totalPrice);
 
-                print('Thông tin đơn hàng: ${product}\n'
-                    '- Mã sản phẩm: ${widget.proID}\n'
-                    '- Số điện thoại khách: ${widget.guestPhone}\n'
-                    '- Tên khách: ${widget.guestName}\n'
-                    '- Địa chỉ: ${widget.guestAddress}\n'
-                    '- Tỉnh/Thành phố: ${widget.province}\n'
-                    '- Quận/Huyện: ${widget.district}\n'
-                    '- Phường/Xã: ${widget.ward}\n'
-                    '- Số lượng sản phẩm: ${widget.proQuantity}');
+                // print('Thông tin đơn hàng: ${product}\n'
+                //     '- Mã sản phẩm: ${widget.proID}\n'
+                //     '- Số điện thoại khách: ${widget.guestPhone}\n'
+                //     '- Tên khách: ${widget.guestName}\n'
+                //     '- Địa chỉ: ${widget.guestAddress}\n'
+                //     '- Tỉnh/Thành phố: ${widget.province}\n'
+                //     '- Quận/Huyện: ${widget.district}\n'
+                //     '- Phường/Xã: ${widget.ward}\n'
+                //     '- Số lượng sản phẩm: ${widget.proQuantity}');
 
                 return Column(
                   children: [
@@ -152,7 +154,7 @@ class _CheckoutBuyNowState extends State<CheckoutBuyNow> {
 
                     // ==>> Khối xử lý đặt hàng
                     CheckoutButton(
-                        haveAccount: userId.isNotEmpty || userId != "",
+                        haveAccount: widget.isAccount,
                         proID: widget.proID,
                         guestPhone: widget.guestPhone,
                         guestName: widget.guestName,

@@ -77,10 +77,11 @@ class FinalStep extends StatelessWidget {
                 const Spacer(),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushAndRemoveUntil(
+                        // ignore: use_build_context_synchronously
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => const Navbar()));
+                        MaterialPageRoute(builder: (context) => const Navbar()),
+                        (Route<dynamic> route) => false);
                   },
                   child: Container(
                     width: double.infinity,

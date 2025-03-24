@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class OrderService {
-  static const String localHost = "192.168.1.73";
+  static const String localHost = "3.25.92.254";
 
   static Future<String?> createOrderItem({
     required String order_id,

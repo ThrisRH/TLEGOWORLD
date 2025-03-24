@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 class CartService {
-  static String localHost = "192.168.1.73";
+  static String localHost = "3.25.92.254";
   static Future<List<dynamic>> getUserCart(String userId) async {
     try {
       final response = await http

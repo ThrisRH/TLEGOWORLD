@@ -133,18 +133,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             if (userId != null &&
                 userId.trim().isNotEmpty &&
                 userId != "none") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => UnloginInfo(
-                    proID: widget.proID,
-                    proQuantity: quantity,
-                  ),
-                ),
-              );
-            } else {
+              print('if trên');
               final userData = await AuthService.getUserInfo(userId);
-              print('thís');
+              print('else dưới');
               if (userData == null) {
                 return;
               } else {
@@ -161,11 +152,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       guestAddress: userData["cus_address"] ?? "",
                       province: userData["cus_province"] ?? "",
                       district: userData["cus_district"] ?? "",
-                      ward: userData["cus_ward"] ?? "",
+                      ward: userData["cus_ward"] ?? "", isAccount: true,
                     ),
                   ),
                 );
               }
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UnloginInfo(
+                    proID: widget.proID,
+                    proQuantity: quantity,
+                  ),
+                ),
+              );
             }
           },
           isCart: false,
