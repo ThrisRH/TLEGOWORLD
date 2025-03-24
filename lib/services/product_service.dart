@@ -10,7 +10,7 @@ class ProductService {
   static Future<Map<String, dynamic>?> getProByID(String proId) async {
     try {
       final response = await http
-          .get(Uri.parse("http://$localHost:5000/api/products/$proId"));
+          .get(Uri.parse("http://3.25.92.254:5000/api/products/$proId"));
       print(response.statusCode);
 
       if (response.statusCode == 200) {

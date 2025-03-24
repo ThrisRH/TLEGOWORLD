@@ -16,7 +16,7 @@ class OrderService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse("http://$localHost:5000/api/orderitem"),
+        Uri.parse("http://3.25.92.254:5000/api/orderitem"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "order_id": order_id,
@@ -73,7 +73,7 @@ class OrderService {
       print("total_price: $total_price");
 
       final response = await http.post(
-        Uri.parse("http://$localHost:5000/api/orderdetail"),
+        Uri.parse("http://3.25.92.254:5000/api/orderdetail"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "cus_id": cus_id,
@@ -104,7 +104,8 @@ class OrderService {
 
   static Future<bool> updateRating(
       String orderId, String proId, bool rating) async {
-    final url = Uri.parse("http://$localHost:5000/api/orderitem/rating/update");
+    final url =
+        Uri.parse("http://3.25.92.254:5000/api/orderitem/rating/update");
 
     try {
       final response = await http.put(
@@ -152,7 +153,7 @@ class OrderService {
   }) async {
     try {
       final response = await http.post(
-        Uri.parse("http://$localHost:5000/api/orderitem/forguest"),
+        Uri.parse("http://3.25.92.254:5000/api/orderitem/forguest"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "pro_ID": pro_ID,

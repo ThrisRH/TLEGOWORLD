@@ -6,7 +6,7 @@ class RatingService {
 
   // Hàm lấy danh sách đánh giá theo pro_ID
   static Future<List<Map<String, dynamic>>?> fetchReviews(String proID) async {
-    final url = Uri.parse("http://$localHost:5000/api/rating/getById/$proID");
+    final url = Uri.parse("http://3.25.92.254:5000/api/rating/getById/$proID");
 
     try {
       final response = await http.get(url);

@@ -130,7 +130,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           onConfirm: (quantity) async {
             // print("Số lượng được chọn: $quantity");
             print('check: ${userId.isEmpty}');
-            if (userId == null || userId == "") {
+            if (userId != null &&
+                userId.trim().isNotEmpty &&
+                userId != "none") {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -142,6 +144,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               );
             } else {
               final userData = await AuthService.getUserInfo(userId);
+              print('thís');
               if (userData == null) {
                 return;
               } else {
