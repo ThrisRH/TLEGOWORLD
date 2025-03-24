@@ -11,6 +11,7 @@ import 'package:tlego_world/feature/create/components/total_box.dart';
 import 'package:tlego_world/feature/create/components/user_info_box.dart';
 import 'package:tlego_world/feature/create/components/vietqr.dart';
 import 'package:tlego_world/feature/create/final_step_order.dart';
+import 'package:tlego_world/feature/payment/payments.dart';
 import 'package:tlego_world/services/auth_helper.dart';
 import 'package:tlego_world/services/cart_service.dart';
 import 'package:tlego_world/services/order_service.dart';
@@ -138,32 +139,35 @@ class _PaymentCheckingState extends State<PaymentChecking> {
                         String proNameFirst = "";
                         double total_order = 0;
 
-                        // Nếu là Thanh toán khi nhận hàng thì tạo đơn hàng
-                        if (selectedPayment == "Thanh toán khi nhận hàng") {
-                          for (int i = 0; i < products.length; i++) {
-                            if (i == 0) {
-                              imageFirst = products[i]['pro_img'];
-                              proNameFirst = products[i]['pro_name'];
-                            }
-                            total_order += products[i]['pro_price'] *
-                                products[i]['pro_quantity'];
-
-                            await OrderService.createOrderItem(
-                              order_id: id,
-                              order_price: products[i]['pro_price'].toDouble(),
-                              order_quantity: products[i]['pro_quantity'],
-                              order_name: products[i]['pro_name'],
-                              pro_ID: products[i]['pro_ID'],
-                              pro_img: products[i]['pro_img'],
-                            );
+                        // Tính tổng giá trị đơn hàng trước khi xử lý
+                        for (int i = 0; i < products.length; i++) {
+                          if (i == 0) {
+                            imageFirst = products[i]['pro_img'];
+                            proNameFirst = products[i]['pro_name'];
                           }
+                          total_order += products[i]['pro_price'] *
+                              products[i]['pro_quantity'];
+                        }
 
-                          // Cập nhật totalAll sau khi có total_order
-                          double totalAll = total_order +
-                              total_shipping.toDouble() -
-                              total_voucher.toDouble();
+                        // Thêm các mục đơn hàng vào hệ thống
+                        for (int i = 0; i < products.length; i++) {
+                          await OrderService.createOrderItem(
+                            order_id: id,
+                            order_price: products[i]['pro_price'].toDouble(),
+                            order_quantity: products[i]['pro_quantity'],
+                            order_name: products[i]['pro_name'],
+                            pro_ID: products[i]['pro_ID'],
+                            pro_img: products[i]['pro_img'],
+                          );
+                        }
 
-                          if (await OrderService.createOrderDetails(
+                        double totalAll = total_order +
+                            total_shipping.toDouble() -
+                            total_voucher.toDouble();
+
+                        // Thêm thông tin đơn hàng vào hệ thống
+                        bool orderCreated =
+                            await OrderService.createOrderDetails(
                                   cus_id: userId,
                                   deliveryFee: total_shipping.toDouble(),
                                   order_date:
@@ -173,31 +177,36 @@ class _PaymentCheckingState extends State<PaymentChecking> {
                                   order_id: id,
                                   order_img: imageFirst,
                                   order_price: total_order,
-                                  order_status: "Đang chờ xác nhận",
+                                  order_status: selectedPayment ==
+                                          "Thanh toán khi nhận hàng"
+                                      ? "Đang chờ xác nhận"
+                                      : "Chờ thanh toán",
                                   pro_name: proNameFirst,
                                   total_price: totalAll,
                                   payment_method: selectedPayment,
-                                  payment_status: 'Chờ thanh toán') !=
-                              null) {
-                            // Điều hướng đến trang FinalStep
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const FinalStep()),
-                            );
+                                  payment_status: selectedPayment ==
+                                          "Thanh toán khi nhận hàng"
+                                      ? "Chờ thanh toán"
+                                      : "Đang xử lý",
+                                ) !=
+                                null;
 
-                            CartService.clearUserCart(userId);
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: 'Đặt hàng không thành công!',
-                                backgroundColor: AppColor.falseColor,
-                                gravity: ToastGravity.TOP);
-                          }
+                        if (!orderCreated) {
+                          Fluttertoast.showToast(
+                              msg: 'Đặt hàng không thành công!',
+                              backgroundColor: AppColor.falseColor,
+                              gravity: ToastGravity.TOP);
+                          return;
+                        }
+
+                        if (selectedPayment == "Thanh toán khi nhận hàng") {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const FinalStep()),
+                          );
+                          CartService.clearUserCart(userId);
                         } else {
-                          // Nếu là Thanh toán trực tuyến, chỉ điều hướng mà không tạo đơn hàng
-                          double totalAll = total_order +
-                              total_shipping.toDouble() -
-                              total_voucher.toDouble();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -233,67 +242,6 @@ class _PaymentCheckingState extends State<PaymentChecking> {
               },
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class OnlinePaymentScreen extends StatefulWidget {
-  final double totalAll;
-  final String id;
-
-  const OnlinePaymentScreen(
-      {super.key, required this.totalAll, required this.id});
-
-  @override
-  _OnlinePaymentScreenState createState() => _OnlinePaymentScreenState();
-}
-
-class _OnlinePaymentScreenState extends State<OnlinePaymentScreen> {
-  String qrData = '';
-
-  @override
-  void initState() {
-    super.initState();
-    _generateQR();
-  }
-
-  Future<void> _generateQR() async {
-    String qrUrl = await generateVietQR(widget.totalAll, widget.id);
-    setState(() {
-      qrData = qrUrl;
-    });
-  }
-
-  void _confirmPayment() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const PaymentChecking()),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      //appBar: AppBar(title: const Text("Thanh toán trực tuyến")),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: qrData.isNotEmpty
-                  ? Image.network(qrData)
-                  : const CircularProgressIndicator(),
-            ),
-            const Spacer(),
-            RedButton(
-              onPressed: _confirmPayment,
-              text: 'Đã chuyển khoản',
-            ),
-          ],
         ),
       ),
     );

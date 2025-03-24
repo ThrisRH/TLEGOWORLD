@@ -95,14 +95,14 @@ class _HomeMainState extends State<HomeMain> {
   }
 
   /// Điều hướng đến trang thanh toán
-  void navigateTo() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const MyAppTest(),
-      ),
-    );
-  }
+  // void navigateTo() {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => const OnlinePaymentScreen(),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
