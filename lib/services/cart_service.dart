@@ -1,10 +1,12 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 class CartService {
+  static String localHost = "192.168.1.73";
   static Future<List<dynamic>> getUserCart(String userId) async {
     try {
       final response = await http
@@ -79,7 +81,7 @@ class CartService {
     try {
       final response = await http.delete(
         Uri.parse(
-          'http://192.168.139.147:5000/api/carts/$userId/$proId',
+          'http://3.25.92.254:5000/api/carts/$userId/$proId',
         ),
       );
 
@@ -97,7 +99,7 @@ class CartService {
   static Future<bool> updateProductQuantity(
       String userId, String cartProId, int quantity) async {
     final url = Uri.parse(
-        'http://192.168.139.147:5000/api/carts/update/$userId/$cartProId'); // Thay API URL
+        'http://3.25.92.254:5000/api/carts/update/$userId/$cartProId'); // Thay API URL
     print(quantity);
     try {
       final response = await http.put(
