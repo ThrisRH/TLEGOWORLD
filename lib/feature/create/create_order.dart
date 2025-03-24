@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tlego_world/assets/color/colors.dart';
 import 'package:tlego_world/components/app_bar.dart';
+import 'package:tlego_world/components/component/button.dart';
 import 'package:tlego_world/feature/create/components/payment_method_box.dart';
 import 'package:tlego_world/feature/create/components/products_box.dart';
 import 'package:tlego_world/feature/create/components/total_box.dart';
 import 'package:tlego_world/feature/create/components/user_info_box.dart';
+import 'package:tlego_world/feature/create/components/vietqr.dart';
 import 'package:tlego_world/feature/create/final_step_order.dart';
 import 'package:tlego_world/services/auth_helper.dart';
 import 'package:tlego_world/services/cart_service.dart';
@@ -135,58 +137,76 @@ class _PaymentCheckingState extends State<PaymentChecking> {
                         String imageFirst = "";
                         String proNameFirst = "";
                         double total_order = 0;
-                        for (int i = 0; i < products.length; i++) {
-                          print(
-                            '$id, ${products[i]['pro_price'].toString()}, ${products[i]['pro_name']}, ${products[i]['pro_quantity']}, ${products[i]['pro_image']}, ${products[i]['pro_ID']}',
-                          );
-                          if (i == 0) {
-                            imageFirst = products[i]['pro_img'];
-                            proNameFirst = products[i]['pro_name'];
+
+                        // Nếu là Thanh toán khi nhận hàng thì tạo đơn hàng
+                        if (selectedPayment == "Thanh toán khi nhận hàng") {
+                          for (int i = 0; i < products.length; i++) {
+                            if (i == 0) {
+                              imageFirst = products[i]['pro_img'];
+                              proNameFirst = products[i]['pro_name'];
+                            }
+                            total_order += products[i]['pro_price'] *
+                                products[i]['pro_quantity'];
+
+                            await OrderService.createOrderItem(
+                              order_id: id,
+                              order_price: products[i]['pro_price'].toDouble(),
+                              order_quantity: products[i]['pro_quantity'],
+                              order_name: products[i]['pro_name'],
+                              pro_ID: products[i]['pro_ID'],
+                              pro_img: products[i]['pro_img'],
+                            );
                           }
-                          total_order += products[i]['pro_price'] *
-                              products[i]['pro_quantity'];
 
-                          OrderService.createOrderItem(
-                            order_id: id,
-                            order_price: products[i]['pro_price'].toDouble(),
-                            order_quantity: products[i]['pro_quantity'],
-                            order_name: products[i]['pro_name'],
-                            pro_ID: products[i]['pro_ID'],
-                            pro_img: products[i]['pro_img'],
-                          );
-                        }
+                          // Cập nhật totalAll sau khi có total_order
+                          double totalAll = total_order +
+                              total_shipping.toDouble() -
+                              total_voucher.toDouble();
 
-                        double totalAll =
-                            total_order + total_shipping - total_voucher;
-
-                        if (await OrderService.createOrderDetails(
-                                cus_id: AuthHelper.getUserId(),
-                                deliveryFee: total_shipping.toDouble(),
-                                order_date:
-                                    "${DateTime.now().toUtc().toIso8601String().split('.').first}Z",
-                                order_expected_day:
-                                    "${DateTime.now().toUtc().toIso8601String().split('.').first}Z",
-                                order_id: id,
-                                order_img: imageFirst,
-                                order_price: total_order,
-                                order_status: "Đang chờ xác nhận",
-                                pro_name: proNameFirst,
-                                total_price: totalAll,
-                                payment_method: selectedPayment,
-                                payment_status: 'Chờ thanh toán') !=
-                            null) {
-                          Navigator.push(
-                              // ignore: use_build_context_synchronously
+                          if (await OrderService.createOrderDetails(
+                                  cus_id: userId,
+                                  deliveryFee: total_shipping.toDouble(),
+                                  order_date:
+                                      "${DateTime.now().toUtc().toIso8601String().split('.').first}Z",
+                                  order_expected_day:
+                                      "${DateTime.now().toUtc().toIso8601String().split('.').first}Z",
+                                  order_id: id,
+                                  order_img: imageFirst,
+                                  order_price: total_order,
+                                  order_status: "Đang chờ xác nhận",
+                                  pro_name: proNameFirst,
+                                  total_price: totalAll,
+                                  payment_method: selectedPayment,
+                                  payment_status: 'Chờ thanh toán') !=
+                              null) {
+                            // Điều hướng đến trang FinalStep
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const FinalStep()));
+                                  builder: (context) => const FinalStep()),
+                            );
 
-                          CartService.clearUserCart(userId);
+                            CartService.clearUserCart(userId);
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: 'Đặt hàng không thành công!',
+                                backgroundColor: AppColor.falseColor,
+                                gravity: ToastGravity.TOP);
+                          }
                         } else {
-                          Fluttertoast.showToast(
-                              msg: 'Đặt hàng không thành công!',
-                              backgroundColor: AppColor.falseColor,
-                              gravity: ToastGravity.TOP);
+                          // Nếu là Thanh toán trực tuyến, chỉ điều hướng mà không tạo đơn hàng
+                          double totalAll = total_order +
+                              total_shipping.toDouble() -
+                              total_voucher.toDouble();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OnlinePaymentScreen(
+                                totalAll: totalAll,
+                                id: id,
+                              ),
+                            ),
+                          );
                         }
                       },
                       child: Container(
@@ -213,6 +233,67 @@ class _PaymentCheckingState extends State<PaymentChecking> {
               },
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class OnlinePaymentScreen extends StatefulWidget {
+  final double totalAll;
+  final String id;
+
+  const OnlinePaymentScreen(
+      {super.key, required this.totalAll, required this.id});
+
+  @override
+  _OnlinePaymentScreenState createState() => _OnlinePaymentScreenState();
+}
+
+class _OnlinePaymentScreenState extends State<OnlinePaymentScreen> {
+  String qrData = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _generateQR();
+  }
+
+  Future<void> _generateQR() async {
+    String qrUrl = await generateVietQR(widget.totalAll, widget.id);
+    setState(() {
+      qrData = qrUrl;
+    });
+  }
+
+  void _confirmPayment() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const PaymentChecking()),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      //appBar: AppBar(title: const Text("Thanh toán trực tuyến")),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: qrData.isNotEmpty
+                  ? Image.network(qrData)
+                  : const CircularProgressIndicator(),
+            ),
+            const Spacer(),
+            RedButton(
+              onPressed: _confirmPayment,
+              text: 'Đã chuyển khoản',
+            ),
+          ],
         ),
       ),
     );

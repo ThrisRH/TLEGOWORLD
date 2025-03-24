@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tlego_world/components/data_api/product_data.dart';
+import 'package:tlego_world/components/data_api/product/product_data.dart';
 import 'package:tlego_world/components/component/ListBar.dart';
 import 'package:tlego_world/feature/ProductList/components/product_cart.dart';
 
@@ -24,7 +24,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
   @override
   void initState() {
     super.initState();
-    futureProducts = fetchData(widget.cate); // Truyền title vào API
+    futureProducts = fetchDataProduct(widget.cate); // Truyền title vào API
   }
 
   @override

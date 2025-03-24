@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class ImageGrid extends StatelessWidget {
-  final List<String> images; // Danh sách đường dẫn ảnh
+  final List<String> images;
   final int imagesPerRow;
   final Function(String) onImageTap;
-  final List<String> title; // Danh sách tiêu đề tương ứng với ảnh
+  final List<String> title;
+  final double spacing; // Thêm khoảng cách tùy chỉnh
+  final void Function(int index)? onTap;
 
   const ImageGrid({
     super.key,
@@ -12,27 +14,30 @@ class ImageGrid extends StatelessWidget {
     this.imagesPerRow = 4,
     required this.onImageTap,
     required this.title,
+    required this.onTap,
+    this.spacing = 8, // Giá trị mặc định là 8
   });
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double spacing = 8;
     double itemSize =
         (screenWidth - (spacing * (imagesPerRow - 1))) / imagesPerRow;
 
     return Wrap(
-      spacing: spacing,
-      runSpacing: spacing,
+      spacing: spacing, // Khoảng cách ngang
+      runSpacing: spacing, // Khoảng cách dọc
       children: images.asMap().entries.map((entry) {
         int index = entry.key;
         String imageUrl = entry.value;
-        String imageTitle = index < title.length
-            ? title[index]
-            : "No Title"; // Tránh lỗi index out of range
+        String imageTitle = index < title.length ? title[index] : "No Title";
 
         return GestureDetector(
-          onTap: () => onImageTap(imageUrl),
+          onTap: () {
+            if (onTap != null) {
+              onTap!(index); // Gọi hàm onTap với index
+            }
+          },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -44,13 +49,21 @@ class ImageGrid extends StatelessWidget {
                 errorBuilder: (context, error, stackTrace) =>
                     const Icon(Icons.broken_image),
               ),
-              const SizedBox(height: 4), // Khoảng cách giữa ảnh và chữ
-              Text(
-                imageTitle,
-                style: const TextStyle(
+              const SizedBox(height: 4),
+              SizedBox(
+                width: itemSize,
+                child: Text(
+                  imageTitle,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF808080),
-                    fontSize: 12),
+                    fontSize: 12,
+                  ),
+                  softWrap: true,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
