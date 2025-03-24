@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tlego_world/components/data_api/categories_data.dart';
-import 'package:tlego_world/components/search.dart';
+import 'package:tlego_world/components/component/search.dart';
 import 'package:tlego_world/feature/home/components/item_cate.dart';
 import 'package:tlego_world/feature/home/view/components/text_titlte.dart';
 
@@ -40,16 +40,11 @@ class _HomeMainState extends State<HomeMain> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: Scaffold(
+    return SafeArea(
+      child: Scaffold(
         backgroundColor: Colors.white,
         body: Column(
           children: [
-            const SizedBox(
-              height: 35,
-            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tlego_world/components/data_api/product_data.dart';
-import 'package:tlego_world/components/ListBar.dart';
+import 'package:tlego_world/components/component/ListBar.dart';
 import 'package:tlego_world/feature/ProductList/components/product_cart.dart';
 
 class ProductListScreen extends StatefulWidget {
@@ -65,7 +65,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     crossAxisCount: 2, // 2 sản phẩm mỗi hàng
                     crossAxisSpacing: 20,
                     mainAxisSpacing: 15,
-                    childAspectRatio: 0.7,
+                    childAspectRatio: 0.6,
                   ),
                   itemCount: products.length,
                   itemBuilder: (context, index) {

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tlego_world/components/QuantitySelector.dart';
-import 'package:tlego_world/components/button.dart';
+import 'package:tlego_world/components/component/QuantitySelector.dart';
+import 'package:tlego_world/components/component/button.dart';
 
-class BuyNowPopup extends StatelessWidget {
+class BuyNowPopup extends StatefulWidget {
   final String productName;
   final String productImage;
+  final bool isCart;
   final int productPrice;
-  final VoidCallback onConfirm;
+  final Function(int) onConfirm; // Nhận số lượng khi bấm nút
 
   const BuyNowPopup({
     super.key,
@@ -15,7 +16,15 @@ class BuyNowPopup extends StatelessWidget {
     required this.productImage,
     required this.productPrice,
     required this.onConfirm,
+    required this.isCart,
   });
+
+  @override
+  _BuyNowPopupState createState() => _BuyNowPopupState();
+}
+
+class _BuyNowPopupState extends State<BuyNowPopup> {
+  int quantity = 1; // Số lượng mặc định
 
   @override
   Widget build(BuildContext context) {
@@ -40,20 +49,19 @@ class BuyNowPopup extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: Image.network(
-                    productImage,
+                    widget.productImage,
                     height: 152,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-
-              const SizedBox(width: 12), // Tạo khoảng cách giữa ảnh và text
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      productName,
+                      widget.productName,
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -64,7 +72,7 @@ class BuyNowPopup extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      '${NumberFormat("#,###", "vi_VN").format(productPrice)}đ',
+                      '${NumberFormat("#,###", "vi_VN").format(widget.productPrice)}đ',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
@@ -76,20 +84,34 @@ class BuyNowPopup extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 80),
+          const SizedBox(height: 40),
           Row(
             children: [
               QuantitySelector(
-                initialValue: 1,
-                onChanged: (value) {},
+                initialValue: quantity,
+                onChanged: (value) {
+                  setState(() {
+                    quantity = value; // Cập nhật số lượng khi thay đổi
+                  });
+                },
               ),
             ],
           ),
           const SizedBox(height: 12),
-          RedButton(
-            text: 'THÊM VÀO GIỎ HÀNG',
-            onPressed: onConfirm,
-          ),
+          widget.isCart
+              ? RedButton(
+                  text: 'THÊM VÀO GIỎ HÀNG',
+                  onPressed: () => widget
+                      .onConfirm(quantity), // Truyền số lượng khi thêm vào giỏ
+                )
+              : RedButton(
+                  text: 'MUA NGAY',
+                  onPressed: () {
+                    print("✅ Nút Mua ngay đã được bấm!");
+                    print("✅ Số lượng đã chọn: $quantity");
+                    widget.onConfirm(quantity);
+                  },
+                ),
         ],
       ),
     );

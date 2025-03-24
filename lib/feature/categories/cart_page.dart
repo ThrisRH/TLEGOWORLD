@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tlego_world/assets/color/colors.dart';
-import 'package:tlego_world/feature/home/app.dart';
 import 'package:tlego_world/feature/navbar/navbar_main.dart';
 import 'package:tlego_world/model/product.dart';
 

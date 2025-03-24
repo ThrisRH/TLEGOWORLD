@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import 'package:tlego_world/assets/color/colors.dart';
 
 class AuthService {
@@ -9,23 +13,46 @@ class AuthService {
     required String password,
   }) async {
     try {
-      print('Email: $email');
-      print('Email: $password');
+      // print('Email: $email');
+      // print('Email: $password');
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
       // Kiểm tra nếu user đã được tạo thành công
       if (userCredential.user != null) {
-        Fluttertoast.showToast(
-          msg: "Đăng ký thành công!",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.SNACKBAR,
-          // ignore: deprecated_member_use
-          backgroundColor: AppColor.mateGray.withOpacity(0.3),
-          textColor: AppColor.mateGray,
-          fontSize: 12,
-        );
-        return true;
+        try {
+          final response = await http.post(
+            Uri.parse("http://3.25.92.254:5000/api/customers"),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode({
+              "cus_email": email,
+              "cus_id": userCredential.user?.uid,
+              "cus_address": "",
+              "cus_name": "",
+              "cus_phone": ""
+            }),
+          );
+          // print("Status Code: ${response.statusCode}");
+          // print("Response: ${response.body}");
+
+          if (response.statusCode >= 200 && response.statusCode < 300) {
+            Fluttertoast.showToast(
+              msg: "Đăng ký thành công!",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.SNACKBAR,
+              // ignore: deprecated_member_use
+              backgroundColor: AppColor.mateGray.withOpacity(0.3),
+              textColor: AppColor.mateGray,
+              fontSize: 12,
+            );
+            return true; // Thêm thành công
+          } else {
+            return false; // Lỗi từ server
+          }
+        } catch (e) {
+          print("Lỗi khi lấy giỏ hàng: $e");
+          return false;
+        }
       }
     } on FirebaseAuthException catch (e) {
       String message = 'Email hoặc password không hợp lệ!';
@@ -125,6 +152,28 @@ class AuthService {
     } catch (e) {
       print("Lỗi khi đăng xuất: $e");
       return false;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> getUserInfo(String userId) async {
+    try {
+      final response = await http.get(
+          Uri.parse("http://3.25.92.254:5000/api/customers/userInfo/$userId"));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        if (data is Map<String, dynamic>) {
+          return data; // Trả về object đúng kiểu Map
+        } else {
+          return null;
+        }
+      } else {
+        throw Exception("Lỗi: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Lỗi khi lấy thông tin người dùng: $e");
+      return null;
     }
   }
 }

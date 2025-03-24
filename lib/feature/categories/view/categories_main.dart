@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tlego_world/components/search.dart';
+import 'package:tlego_world/components/component/search.dart';
 import 'package:tlego_world/feature/ProductList/view/ProductList_main.dart';
 import 'package:tlego_world/feature/categories/components/item.dart';
 import 'package:tlego_world/components/data_api/categories_data.dart';
@@ -75,7 +75,7 @@ class _CategoriesMainState extends State<CategoriesMain> {
                                 crossAxisCount: 3,
                                 crossAxisSpacing: 12,
                                 mainAxisSpacing: 12,
-                                childAspectRatio: 0.8,
+                                childAspectRatio: 0.7,
                               ),
                               itemCount: categoriesList.length,
                               itemBuilder: (context, index) {
