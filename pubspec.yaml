@@ -1,7 +1,7 @@
 name: tlego_world
 description: "A new Flutter project."
 
-publish_to: 'none' 
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -12,6 +12,28 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
+  bloc: ^8.1.4
+  flutter_svg: ^1.1.6
+  smooth_page_indicator: ^1.2.0+3
+  flutter_bloc: ^8.1.6
+  shared_preferences: ^2.3.5
+  camera: ^0.11.0+2
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.19.0
+  image_picker: ^0.8.7+5
+  google_mlkit_text_recognition: ^0.14.0
+  flutter_secure_storage: ^9.2.4
+  flutter_dash: ^1.0.0
+  uuid: ^4.5.1
+  firebase_auth: ^5.5.1
+  fluttertoast: ^8.2.12
+  firebase_core: ^3.12.1
+
+  http: ^1.3.0
+
+  badges: ^3.1.2
+  firebase_database: ^11.3.4
 
 dev_dependencies:
   flutter_test:
@@ -20,5 +42,38 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
+  assets:
+    - lib/assets/svg/
+    - lib/assets/png/
+    - lib/assets/images/lego_pics/
+    - lib/assets/images/products/
+    - lib/assets/png/homepage_png/
+    - lib/assets/images/
+    - lib/assets/svg/navbar_icon_active/
+    - lib/assets/svg/components/
 
+    # - lib/assets/svg/profile_icon/
 
+  fonts:
+    - family: Lato
+      fonts:
+        - asset: lib/assets/font/Lato-Bold.ttf
+    - family: Lato_Light
+      fonts:
+        - asset: lib/assets/font/Lato-Light.ttf
+    - family: Lato_Regular
+      fonts:
+        - asset: lib/assets/font/Lato-Regular.ttf
+    - family: Lato_Thin
+      fonts:
+        - asset: lib/assets/font/Lato-Thin.ttf
+    - family: HappyMonkey
+      fonts:
+        - asset: lib/assets/font/HappyMonkey.ttf
+    - family: Roboto
+      fonts:
+        - asset: lib/assets/font/Roboto.ttf
+    - family: Roboto_Italic
+      fonts:
+        - asset: lib/assets/font/Roboto-Italic.ttf

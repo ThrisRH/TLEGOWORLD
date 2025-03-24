@@ -1,0 +1,129 @@
+import 'package:flutter/material.dart';
+import 'package:tlego_world/components/component/search.dart';
+import 'package:tlego_world/feature/ProductList/view/ProductList_main.dart';
+import 'package:tlego_world/feature/categories/components/item.dart';
+import 'package:tlego_world/components/data_api/categories_data.dart';
+
+void main() {
+  runApp(const CategoriesMain());
+}
+
+class CategoriesMain extends StatefulWidget {
+  const CategoriesMain({super.key});
+
+  @override
+  _CategoriesMainState createState() => _CategoriesMainState();
+}
+
+class _CategoriesMainState extends State<CategoriesMain> {
+  List<Map<String, dynamic>> categoriesList = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadCategories();
+  }
+
+  /// Tải dữ liệu danh mục từ API
+  Future<void> loadCategories() async {
+    try {
+      final data = await FetchCategories.fetchData();
+
+      if (!mounted) return; // Kiểm tra widget có còn tồn tại trước khi setState
+
+      setState(() {
+        categoriesList = List<Map<String, dynamic>>.from(data);
+        isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  /// Điều hướng đến danh mục sản phẩm
+  void navigateToCategoryDetail(BuildContext context, String categoryTitle,
+      String cate, int categoryCount) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductListScreen(
+          title: categoryTitle,
+          cate: cate,
+          count: categoryCount,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            width: double.infinity,
+            child: Column(
+              children: [
+                SearchBarbtn(
+                  onCartTap: () {},
+                ),
+                const SizedBox(height: 24),
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : categoriesList.isEmpty
+                        ? const Center(child: Text("Không có danh mục nào"))
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                                childAspectRatio: 0.7,
+                              ),
+                              itemCount: categoriesList.length,
+                              itemBuilder: (context, index) {
+                                final category = categoriesList[index];
+
+                                // Chuyển đổi 'count' thành int, xử lý trường hợp null
+                                int categoryCount = 0;
+                                if (category['count'] is int) {
+                                  categoryCount = category['count'];
+                                } else if (category['count'] != null) {
+                                  categoryCount = int.tryParse(
+                                          category['count'].toString()) ??
+                                      0;
+                                }
+
+                                return CategoryCard(
+                                  imageUrl: category['image'],
+                                  title: category['title'],
+                                  itemCount: categoryCount,
+                                  onTap: () {
+                                    navigateToCategoryDetail(
+                                      context,
+                                      category['title'] ?? 'Không có tiêu đề',
+                                      category['cate'] ?? '',
+                                      categoryCount,
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

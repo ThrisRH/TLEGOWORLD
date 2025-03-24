@@ -1,0 +1,2 @@
+C:/Users/ADMIN/OneDrive/Documents/CodingHW/Flutter/TLego/TLEGOWORLD/android/app/.cxx/Debug/w6p4ez3s/x86/CMakeFiles/edit_cache.dir
+C:/Users/ADMIN/OneDrive/Documents/CodingHW/Flutter/TLego/TLEGOWORLD/android/app/.cxx/Debug/w6p4ez3s/x86/CMakeFiles/rebuild_cache.dir

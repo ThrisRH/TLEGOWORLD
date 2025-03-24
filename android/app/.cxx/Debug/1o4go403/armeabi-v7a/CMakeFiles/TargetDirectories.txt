@@ -1,0 +1,2 @@
+C:/Users/msi/Documents/code/tlego_fe/TLEGOWORLD/android/app/.cxx/Debug/1o4go403/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/msi/Documents/code/tlego_fe/TLEGOWORLD/android/app/.cxx/Debug/1o4go403/armeabi-v7a/CMakeFiles/rebuild_cache.dir
